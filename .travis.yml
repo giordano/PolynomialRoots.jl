@@ -2,11 +2,11 @@
 language: julia
 os:
   - linux
-    addons:
-      apt:
-        packages:
-          - gfortran
   - osx
+addons:
+  apt:
+    packages:
+      - gfortran
 julia:
   - release
   - nightly
