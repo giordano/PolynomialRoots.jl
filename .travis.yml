@@ -15,6 +15,5 @@ notifications:
 script:
  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
  - julia -e 'Pkg.clone(pwd()); Pkg.build("CmplxRoots"); Pkg.test("CmplxRoots"; coverage=true)'
- - julia -e 'cd(Pkg.dir("CmplxRoots")); include("test/benchmark.jl")'
 after_success:
  - julia -e 'cd(Pkg.dir("CmplxRoots")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder()); Codecov.submit(process_folder())'
