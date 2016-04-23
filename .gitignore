@@ -1,3 +1,5 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
+/deps/libcmplxroots.*
+/deps/cmplx_roots_sg*
