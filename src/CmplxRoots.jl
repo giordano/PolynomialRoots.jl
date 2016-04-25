@@ -62,11 +62,13 @@ function solve_quadratic_eq(poly::Vector{Complex128})
     b = poly[2]
     c = poly[1]
     Δ = sqrt(b*b - 4*a*c)
-    if real(conj(b)*Δ) >= 0
-        x0 = -0.5*(b + Δ)
-    else
-        x0 = -0.5*(b - Δ)
-    end
+    # Here the original function performs a test to decide whether to set
+    #   x0 = -0.5*(b + Δ)
+    # or
+    #   x0 = -0.5*(b - Δ)
+    # I am pretty confident this isn't needed.  I choice the one with addition
+    # to avoid losing significance when performing a subtraction.
+    x0 = -0.5*(b + Δ)
     if x0 == 0
         x1 = x0
     else
@@ -567,13 +569,12 @@ function sort_5_points_by_separation!(points::Vector{Complex128})
     return points
 end
 
+# Original function has a `use_roots_as_starting_points' argument.  We don't
+# have this argument and always use `roots' as starting points, it's a task of
+# the interface to set a proper starting value if the user doesn't provide it.
 function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
-                degree::Integer, polish::Bool, use_roots::Bool)
+                degree::Integer, polish::Bool)
     poly2 = copy(poly)
-    # initialize starting points
-    if ! use_roots
-        roots *= c_zero
-    end
     # skip small degree polynomials from doing Laguerre's method
     if degree <= 1
         if degree == 1
@@ -584,8 +585,7 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
     for n = degree:-1:3
         roots[n], iter, success = cmplx_laguerre2newton(poly2, n, roots[n], 2)
         if ! success
-            roots[n] = c_zero
-            roots[n], iter, success = cmplx_laguerre(poly2, n, roots[n])
+            roots[n], iter, success = cmplx_laguerre(poly2, n, c_zero)
         end
         # divide the polynomial by this root
         coef = poly2[n+1]
@@ -595,13 +595,9 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
             coef = prev + roots[n]*coef
         end
     end
-    roots[2], iter, success = cmplx_laguerre2newton(poly2, 2, roots[2], 2)
-    if ! success
-        roots[1], roots[2] = solve_quadratic_eq(poly2)
-    else
-        # calculate last root from Viete's formula
-        roots[1] = -(roots[2] + poly2[2]*inv(poly2[3]))
-    end
+    # Differently from original function, we always calculate last 2 roots with
+    # `solve_quadratic_eq'.
+    roots[1], roots[2] = solve_quadratic_eq(poly2)
     if polish
         for n = 1:degree # polish roots one-by-one with a full polynomial
             roots[n], iter, success = cmplx_laguerre(poly, degree, roots[n])
@@ -614,12 +610,12 @@ function roots{N1<:Number,N2<:Number}(poly::Vector{N1}, roots::Vector{N2};
                                       polish::Bool=false)
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
-    roots!(float(complex(roots)), float(complex(poly)), degree, polish, true)
+    roots!(float(complex(roots)), float(complex(poly)), degree, polish)
 end
 
 function roots{N1<:Number}(poly::Vector{N1}; polish::Bool=false)
     degree = length(poly) - 1
-    roots!(Array(Complex128, degree), float(complex(poly)), degree, polish, false)
+    roots!(Array(Complex128, degree), float(complex(poly)), degree, polish)
 end
 
 function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
@@ -645,8 +641,7 @@ function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
             for m = degree:-1:4 # find the roots one-by-one (until 3 are left to be found)
                 roots[m], iter, succ = cmplx_laguerre2newton(poly2, m, roots[m], 2)
                 if ! succ
-                    roots[m] = c_zero
-                    roots[m], iter, succ = cmplx_laguerre(poly2, m, roots[m])
+                    roots[m], iter, succ = cmplx_laguerre(poly2, m, c_zero)
                 end
                 # divide polynomial by this root
                 poly2, remainder = divide_poly_1(roots[m], poly2, m)

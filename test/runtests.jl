@@ -35,7 +35,6 @@ for i = 1:length(res)
 end
 
 # 2nd-order polynomials
-tol = 1e-14
 poly1 = [-15im, (5 - 3im), 1]
 res1  = roots(poly1)
 poly2 = [0, complex(5, -rand()), 1]
@@ -43,17 +42,16 @@ res2  = roots(poly2)
 poly3 = [0, 0, 7]
 res3  = roots(poly3)
 for i = 1:length(res)
-    @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3]) tol
-    @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3]) tol
-    @test_approx_eq_eps 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3]) tol
+    @test_approx_eq 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3])
+    @test_approx_eq 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3])
+    @test_approx_eq 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3])
 end
 
 # 3rd-order polynomial
-tol  = 1e-13
 poly = [24, -(6 + 28im), (7im - 4), 1]
 res  = roots(poly)
 for i = 1:length(res)
-    @test_approx_eq_eps 0 (@evalpoly res[i] poly[1] poly[2] poly[3] poly[4]) tol
+    @test_approx_eq 0 (@evalpoly res[i] poly[1] poly[2] poly[3] poly[4])
 end
 
 # 4th-order polynomial

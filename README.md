@@ -1,6 +1,6 @@
 # CmplxRoots
 
-[![Build Status](https://travis-ci.org/giordano/CmplxRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/CmplxRoots.jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/CmplxRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/CmplxRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/CmplxRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/CmplxRoots.jl?branch=master) <!-- [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.4.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.5.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) -->
+[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/CmplxRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/CmplxRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/cmplxroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/CmplxRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/CmplxRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/CmplxRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/CmplxRoots.jl?branch=master) <!-- [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.4.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.5.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) -->
 
 Introduction
 ------------
@@ -156,15 +156,12 @@ Related projects
 
 Another Julia package for finding roots of complex polynomials is
 [`Polynomials.jl`](https://github.com/Keno/Polynomials.jl), by Jameson Nash and
-other contributors.  Differently from `CmplxRoots.jl`, this is entirely written
-in Julia and does not depend on packages written in foreign languages, so it
-runs smoothly on all operating systems where Julia is available.  In order to
-solve the polynomial, `Polynomials.jl` calculates eigenvalues of its companion
-matrix.  This package does much more than finding roots of polynomials (among
-other features, it can integrate and differentiate polynomials), but
-`CmplxRoots.jl` is usually faster than `Polynomials.jl` and often slightly more
-precise.  If you are after speed and precision, `CmplxRoots.jl` can still be a
-better option.
+other contributors.  This package does much more than finding roots of
+polynomials (among other features, it can integrate and differentiate
+polynomials).  In order to solve the polynomial, `Polynomials.jl` calculates
+eigenvalues of its companion matrix, but `CmplxRoots.jl` is usually faster by up
+to an order of magnitude and often slightly more precise.  If you are after
+speed and precision, `CmplxRoots.jl` can still be a better option.
 
 License
 -------
