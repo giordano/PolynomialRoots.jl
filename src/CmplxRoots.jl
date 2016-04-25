@@ -42,8 +42,8 @@ const FRAC_JUMPS = [0.64109297, # some random numbers
                     0.37794326, 0.04618805,  0.75132137]
 const FRAC_JUMP_LEN = length(FRAC_JUMPS)
 const FRAC_ERR = 2e-15
-const c_zero = complex(0.0)
-const c_one  = complex(1.0)
+const c_zero = zero(Complex128)
+const c_one  = one(Complex128)
 
 function divide_poly_1(p::Complex128, poly::Vector{Complex128}, degree::Integer)
     coef = poly[degree+1]
@@ -67,7 +67,7 @@ function solve_quadratic_eq(poly::Vector{Complex128})
     else
         x0 = -0.5*(b - Δ)
     end
-    if x0 == complex(0)
+    if x0 == 0
         x1 = x0
     else
         x1 = c*inv(x0) # Viete's formula
@@ -188,7 +188,7 @@ function cmplx_laguerre(poly::Vector{Complex128},
     one_nth = inv(degree)
     n_1_nth = (degree - 1)*one_nth
     two_n_div_n_1 = 2*inv(n_1_nth)
-    c_one_nth = complex(one_nth, 0.0)
+    c_one_nth = complex(one_nth)
     for i = 1:MAX_ITERS
         # prepare stoping criterion
         ek = abs(poly[degree + 1])
@@ -222,7 +222,7 @@ function cmplx_laguerre(poly::Vector{Complex128},
         else
             good_to_go = false # reset if we are outside the zone of the root
         end
-        faq::Complex128 = complex(1.0)
+        faq::Complex128 = c_one
         denom = c_zero
         if dp != zero
             invdp = inv(dp)
@@ -353,7 +353,7 @@ function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
                     break # go to Newton's or SG
                 end
                 if mod(i, FRAC_JUMP_EVERY) == 0 # decide whether to do a jump of modified length (to break cycles)
-                    faq = FRAC_JUMPS[trunc(Integer, mod(i/FRAC_JUMP_EVERY-1,FRAC_JUMP_LEN)) + 1]
+                    faq = FRAC_JUMPS[trunc(Integer, mod(i*inv(FRAC_JUMP_EVERY)-1,FRAC_JUMP_LEN)) + 1]
                     newroot = root - faq*dx # do jump of some semi-random length (0<faq<1)
                 end
                 root = newroot
@@ -441,7 +441,7 @@ function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
                     break # go to Newton's
                 end
                 if mod(i, FRAC_JUMP_EVERY) == 0 # decide whether to do a jump of modified length (to break cycles)
-                    faq = FRAC_JUMPS[trunc(Integer, mod(i/FRAC_JUMP_EVERY-1,FRAC_JUMP_LEN)) + 1]
+                    faq = FRAC_JUMPS[trunc(Integer, mod(i*inv(FRAC_JUMP_EVERY)-1,FRAC_JUMP_LEN)) + 1]
                     newroot = root - faq*dx # do jump of some semi-random length (0<faq<1)
                 end
                 root = newroot
@@ -577,7 +577,7 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
     # skip small degree polynomials from doing Laguerre's method
     if degree <= 1
         if degree == 1
-            roots[1] = -poly[1]/poly[2]
+            roots[1] = -poly[1]*inv(poly[2])
         end
         return roots
     end
@@ -600,7 +600,7 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
         roots[1], roots[2] = solve_quadratic_eq(poly2)
     else
         # calculate last root from Viete's formula
-        roots[1] = -(roots[2] + poly2[2]/poly2[3])
+        roots[1] = -(roots[2] + poly2[2]*inv(poly2[3]))
     end
     if polish
         for n = 1:degree # polish roots one-by-one with a full polynomial
