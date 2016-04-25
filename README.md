@@ -56,7 +56,7 @@ or put this command into your Julia script.
 
 ``` julia
 roots(polynomial[, roots, polish=true])
-roots5(polynomial[, roots, polish=true])
+roots5(polynomial[, roots])
 ```
 
 `roots` can be used to solve polynomials of any degree, `roots5` is tailored to
@@ -71,23 +71,17 @@ The mandatory argument for both functions is:
 
 * `polynomial`, the vector holding coefficients of the polynomial you want to
   solve, in ascending order, from the lowest to the highest.  Coefficients can
-  be complex or real
+  be complex and real
 
 Optional arguments are:
 
 * `roots`: if you roughly know in advance the position of the roots, you can
   pass the vector with the known roots to speed up convergence.  `roots` vector
-  must be one element shorther than `polynomial`.  Elements of the vector can be
-  complex or real
-* `polish` (boolean keyword)
-
-	* in `roots`: if set to `true`, after all roots have been found by dividing
-	  original polynomial by each root found, all roots will be polished using
-	  full polynomial.  Default is `false`
-	* in `roots5`: if you know the roots pretty well, for example because you
-	  have changed the coefficiens of the polynomial only a bit, so the two
-	  closest roots are most likely still the closest ones, set this keyword to
-	  `true`.  Default it `false`
+  must be one element shorther than `polynomial`.  In `roots5`, the roots will
+  be only polished.  Elements of the vector can be complex and real
+* `polish` (boolean keyword, only for `roots`): if set to `true`, after all
+  roots have been found by dividing original polynomial by each root found, all
+  roots will be polished using full polynomial.  Default is `false`
 
 The functions return in output the `Complex128` vector with all roots of
 `polynomial`.  **Note:** if `roots` optional argument is provided, it is *not*

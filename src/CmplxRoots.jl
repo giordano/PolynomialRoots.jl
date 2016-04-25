@@ -624,8 +624,7 @@ function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
     roots_robust = copy(roots)
     go_to_robust = 0
     if ! polish
-        # initialize roots
-        roots *= c_zero
+        # The roots are assumed to have been initialized by the user interface.
         go_to_robust = 1
     end
     first_3_roots_order_changed = false
@@ -718,11 +717,15 @@ function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
 end
 
 function roots5{N1<:Number,N2<:Number}(poly::Vector{N1},
-                                       roots::Vector{N2}=Array(Complex128,  5);
-                                       polish::Bool=false)
+                                       roots::Vector{N2})
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     @assert length(roots) == 5 "`roots' vector must have 5 elements"
-    return roots5!(float(complex(roots)), float(complex(poly)), polish)
+    return roots5!(float(complex(roots)), float(complex(poly)), true)
+end
+
+function roots5{N<:Number}(poly::Vector{N})
+    @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
+    return roots5!(zeros(Complex128,  5), float(complex(poly)), false)
 end
 
 """
@@ -746,7 +749,7 @@ Function `root5` is specialized for polynomials of degree 5.
 roots
 
 """
-    roots5(polynomial[, roots, polish=true]) -> roots
+    roots5(polynomial[, roots]) -> roots
 
 Find all the roots of `polynomial`, of degree 5 only.
 
@@ -756,11 +759,8 @@ Arguments:
   which to find the roots, from the lowest coefficient to the highest one
 * `roots` (optional argument): vector of initial guess roots (of length 5).  If
   you have a very rough idea where some of the roots can be, this vector is used
-  as starting value for Laguerre's method
-* `polish` (optional boolean keyword): if you know the roots pretty well, for
-  example because you have changed the coefficiens of the polynomial only a bit,
-  so the two closest roots are most likely still the closest ones, set this
-  keyword to `true`.  Default it `false`
+  as starting value for Laguerre's method and the provided roots will be only
+  polished
 
 Function `roots` can be used to find roots of polynomials of any degree.
 """
