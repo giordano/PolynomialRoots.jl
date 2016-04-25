@@ -8,12 +8,11 @@ Introduction
 `CmplxRoots.jl` is a library for finding roots of complex polynomials, written
 in [Julia](http://julialang.org/).
 
-This is just a Julia wrapper around the
+This is an implementation in Julia of the
 [General Complex Polynomial Root Solver](http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/),
 written in Fortran, by **Jan Skowron** and **Andy Gould**.  All the credits goes
-to them for the underlying functions, blame me for any problem with the Julia
-interface.  Feel free to report bugs and make suggestions at
-https://github.com/giordano/CmplxRoots.jl/issues.
+to them for the original algorithm.  Feel free to report bugs and make
+suggestions at https://github.com/giordano/CmplxRoots.jl/issues.
 
 The root finding algorithm employed in this library is described in
 
@@ -27,11 +26,6 @@ Fortran are not available as free software, according to the
 [definition](https://www.gnu.org/philosophy/free-sw.html) of the Free Software
 Foundation.
 
-**Note:** This package has been tested only on GNU/Linux and OS X systems.
-Trying to install it on Windows will likely fail, please report at
-https://github.com/giordano/CmplxRoots.jl/issues/1 if you manage to install the
-package on this system.
-
 Installation
 ------------
 
@@ -43,10 +37,6 @@ In a Julia session run the command
 ```julia
 julia> Pkg.clone("https://github.com/giordano/CmplxRoots.jl.git")
 ```
-
-Installation script will download General Complex Polynomial Root Solver source
-code and build the shared object.  In order to accomplish this task a Fortran
-compiler is needed.
 
 <!-- You may need to update your package list with `Pkg.update()` in order to get the -->
 <!-- latest version of `CmplxRoots.jl`. -->
@@ -120,18 +110,18 @@ This is a fifth-order polynomial, so we can find its zeros with both `roots` and
 julia> roots([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
 5-element Array{Complex{Float64},1}:
          -0.0+5.0im
- 4.0-1.11022e-15im
-  1.51244e-16+3.0im
-  2.0+2.6822e-16im
- -8.97111e-18+1.0im
+ 4.0-8.88178e-16im
+  8.29305e-17+3.0im
+ 2.0+1.88202e-16im
+ -2.95544e-17+1.0im
 
 julia> roots5([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
 5-element Array{Complex{Float64},1}:
-          0.0+5.0im
- 4.0-5.92119e-16im
- 2.0-9.08596e-17im
-  2.66454e-15+3.0im
- -2.66454e-15+1.0im
+  5.92119e-16+5.0im
+  4.0-1.4803e-16im
+ 2.0+1.88202e-16im
+ -1.88738e-15+3.0im
+  2.10942e-15+1.0im
 ```
 
 `CmplxRoots.jl` handles polynomials with high-multiplicity roots as well.  For
@@ -173,8 +163,8 @@ solve the polynomial, `Polynomials.jl` calculates eigenvalues of its companion
 matrix.  This package does much more than finding roots of polynomials (among
 other features, it can integrate and differentiate polynomials), but
 `CmplxRoots.jl` is usually faster than `Polynomials.jl` and often slightly more
-precise.  If you are after speed and precision, `CmplxRoots.jl` can still be
-your choice.
+precise.  If you are after speed and precision, `CmplxRoots.jl` can still be a
+better option.
 
 License
 -------

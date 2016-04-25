@@ -451,7 +451,7 @@ function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
                 return root, iter, success
             end
         end # if mode 1
-        if(mode==0) then  # NEWTON'S METHOD
+        if mode == 0 # NEWTON'S METHOD
             for i = j:j+10 # do only 10 iterations the most, then go back to full Laguerre's
                 faq = 1.0
                 # calculate value of polynomial and its first two derivatives

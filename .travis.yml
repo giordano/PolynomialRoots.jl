@@ -3,10 +3,6 @@ language: julia
 os:
   - linux
   - osx
-addons:
-  apt:
-    packages:
-      - gfortran
 julia:
   - release
   - nightly
