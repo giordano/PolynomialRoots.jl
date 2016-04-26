@@ -62,13 +62,11 @@ function solve_quadratic_eq(poly::Vector{Complex128})
     b = poly[2]
     c = poly[1]
     Δ = sqrt(b*b - 4*a*c)
-    # Here the original function performs a test to decide whether to set
-    #   x0 = -0.5*(b + Δ)
-    # or
-    #   x0 = -0.5*(b - Δ)
-    # I am pretty confident this isn't needed.  I choice the one with addition
-    # to avoid losing significance when performing a subtraction.
-    x0 = -0.5*(b + Δ)
+    if real(conj(b)*Δ) >= 0
+        x0 = -0.5*(b + Δ)
+    else
+        x0 = -0.5*(b - Δ)
+    end
     if x0 == 0
         x1 = x0
     else

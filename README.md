@@ -1,6 +1,6 @@
 # CmplxRoots
 
-[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/CmplxRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/CmplxRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/cmplxroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/CmplxRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/CmplxRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/CmplxRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/CmplxRoots.jl?branch=master) <!-- [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.4.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.5.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) -->
+[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/CmplxRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/CmplxRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/cmplxroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/CmplxRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/CmplxRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/CmplxRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/CmplxRoots.jl?branch=master) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.4.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.5.svg)](http://pkg.julialang.org/?pkg=CmplxRoots)
 
 Introduction
 ------------
@@ -35,11 +35,11 @@ with
 In a Julia session run the command
 
 ```julia
-julia> Pkg.clone("https://github.com/giordano/CmplxRoots.jl.git")
+julia> Pkg.add("CmplxRoots")
 ```
 
-<!-- You may need to update your package list with `Pkg.update()` in order to get the -->
-<!-- latest version of `CmplxRoots.jl`. -->
+You may need to update your package list with `Pkg.update()` in order to get the
+latest version of `CmplxRoots.jl`.
 
 Usage
 -----
@@ -103,11 +103,11 @@ This is a fifth-order polynomial, so we can find its zeros with both `roots` and
 ``` julia
 julia> roots([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
 5-element Array{Complex{Float64},1}:
-         -0.0+5.0im
- 4.0-8.88178e-16im
-  8.29305e-17+3.0im
- 2.0+1.88202e-16im
- -2.95544e-17+1.0im
+ -1.55431e-15+5.0im
+ 4.0+1.77636e-16im
+  1.55028e-15+3.0im
+ -1.04196e-16+1.0im
+ 2.0-2.00595e-16im
 
 julia> roots5([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
 5-element Array{Complex{Float64},1}:
@@ -122,27 +122,27 @@ julia> roots5([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
 example, consider
 
 ```
-(x - 1)^5 = x^5 - 5x^4 + 10x^3 - 10x^2 + 5x -1
+(x + 1)^5 = x^5 + 5x^4 + 10x^3 + 10x^2 + 5x + 1
 ```
 
 You can find its roots with
 
 ``` julia
-julia> roots([1, -5, 10, -10, 5, -1])
+julia> roots([1, 5, 10, 10, 5, 1])
 5-element Array{Complex{Float64},1}:
- 1.0-0.0im
- 1.0+0.0im
- 1.0+0.0im
- 1.0+0.0im
- 1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
 
-julia> roots5([1, -5, 10, -10, 5, -1])
+julia> roots5([1, 5, 10, 10, 5, 1])
 5-element Array{Complex{Float64},1}:
- 1.0+0.0im
- 1.0+0.0im
- 1.0+0.0im
- 1.0+0.0im
- 1.0-0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
+ -1.0+0.0im
 ```
 
 Related projects
