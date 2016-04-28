@@ -1,18 +1,18 @@
-# CmplxRoots
+# PolynomialRoots
 
-[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/CmplxRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/CmplxRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/cmplxroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/CmplxRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/CmplxRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/CmplxRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/CmplxRoots.jl?branch=master) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.4.svg)](http://pkg.julialang.org/?pkg=CmplxRoots) [![CmplxRoots](http://pkg.julialang.org/badges/CmplxRoots_0.5.svg)](http://pkg.julialang.org/?pkg=CmplxRoots)
+[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/PolynomialRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/PolynomialRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/polynomialroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/PolynomialRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/PolynomialRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/PolynomialRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/PolynomialRoots.jl?branch=master) [![PolynomialRoots](http://pkg.julialang.org/badges/PolynomialRoots_0.4.svg)](http://pkg.julialang.org/?pkg=PolynomialRoots) [![PolynomialRoots](http://pkg.julialang.org/badges/PolynomialRoots_0.5.svg)](http://pkg.julialang.org/?pkg=PolynomialRoots)
 
 Introduction
 ------------
 
-`CmplxRoots.jl` is a library for finding roots of complex polynomials, written
-in [Julia](http://julialang.org/).
+`PolynomialRoots.jl` is a library for finding roots of complex polynomials,
+written in [Julia](http://julialang.org/).
 
 This is an implementation in Julia of the
 [General Complex Polynomial Root Solver](http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/),
 written in Fortran, by **Jan Skowron** and **Andy Gould**.  All the credits goes
 to them for the original algorithm.  Feel free to report bugs and make
-suggestions at https://github.com/giordano/CmplxRoots.jl/issues.
+suggestions at https://github.com/giordano/PolynomialRoots.jl/issues.
 
 The root finding algorithm employed in this library is described in
 
@@ -26,23 +26,23 @@ Fortran are not available as free software, according to the
 [definition](https://www.gnu.org/philosophy/free-sw.html) of the Free Software
 Foundation.
 
-`CmplxRoots.jl` can also take advantage of native arbitrary precision
+`PolynomialRoots.jl` can also take advantage of native arbitrary precision
 capabilities of Julia and achieve more precise results.
 
 Installation
 ------------
 
-`CmplxRoots.jl` is available for Julia 0.4 and later versions, and can be installed
-with
+`PolynomialRoots.jl` is available for Julia 0.4 and later versions, and can be
+installed with
 [Julia built-in package manager](http://docs.julialang.org/en/stable/manual/packages/).
 In a Julia session run the command
 
 ```julia
-julia> Pkg.add("CmplxRoots")
+julia> Pkg.add("PolynomialRoots")
 ```
 
 You may need to update your package list with `Pkg.update()` in order to get the
-latest version of `CmplxRoots.jl`.
+latest version of `PolynomialRoots.jl`.
 
 Usage
 -----
@@ -50,12 +50,13 @@ Usage
 After installing the package, run
 
 ``` julia
-using CmplxRoots
+using PolynomialRoots
 ```
 
 or put this command into your Julia script.
 
-`CmplxRoots.jl` provides two functions to find the roots of complex polynomials
+`PolynomialRoots.jl` provides two functions to find the roots of complex
+polynomials
 
 ``` julia
 roots(polynomial[, roots, polish=true])
@@ -121,8 +122,8 @@ julia> roots5([120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1])
   2.10942e-15+1.0im
 ```
 
-`CmplxRoots.jl` handles polynomials with high-multiplicity roots as well.  For
-example, consider
+`PolynomialRoots.jl` handles polynomials with high-multiplicity roots as well.
+For example, consider
 
 ```
 (x + 1)^5 = x^5 + 5x^4 + 10x^3 + 10x^2 + 5x + 1
@@ -208,18 +209,18 @@ Another Julia package for finding roots of complex polynomials is
 other contributors.  This package does much more than finding roots of
 polynomials (among other features, it can integrate and differentiate
 polynomials).  In order to solve the polynomial, `Polynomials.jl` calculates
-eigenvalues of its companion matrix, but `CmplxRoots.jl` is usually faster by up
-to an order of magnitude and often slightly more precise.  In addition,
+eigenvalues of its companion matrix, but `PolynomialRoots.jl` is usually faster
+by up to an order of magnitude and often slightly more precise.  In addition,
 `Polynomials` cannot extract roots in arbitrary precision.  If you are after
-speed and precision, `CmplxRoots.jl` can still be a better option.
+speed and precision, `PolynomialRoots.jl` can still be a better option.
 
 License
 -------
 
-The `CmplxRoots.jl` package is licensed under the GNU Lesser General Public
+The `PolynomialRoots.jl` package is licensed under the GNU Lesser General Public
 License version 3 or any later version, as well as under a "customary scientific
 license", which implies that if this code was important in the scientific
 process or for the results of your scientific work, you are asked for the
 appropriate citation of the paper Skowron & Gould 2012
-(http://arxiv.org/abs/1203.1034).  The original author of `CmplxRoots.jl` is
-Mosè Giordano.
+(http://arxiv.org/abs/1203.1034).  The original author of `PolynomialRoots.jl`
+is Mosè Giordano.

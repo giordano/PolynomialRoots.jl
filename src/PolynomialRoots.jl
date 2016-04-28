@@ -1,4 +1,4 @@
-### CmplxRoots.jl --- Complex Polynomial Root Solver
+### PolynomialRoots.jl --- Complex Polynomial Root Solver
 
 # Copyright (C) 2016  Mosè Giordano
 
@@ -20,6 +20,9 @@
 
 ### References:
 
+#  * Skowron, J. & Gould, A. 2012, " General Complex Polynomial Root Solver and
+#    Its Further Optimization for Binary Microlenses", arXiv:1203.1034.
+#    URL: http://arxiv.org/abs/1203.1034
 #  * Adams, D. A., 1967, "A stopping criterion for polynomial root finding",
 #    Communications of the ACM, Volume 10, Issue 10, Oct. 1967, p. 655
 #    DOI:10.1145/363717.363775. URL:
@@ -27,7 +30,7 @@
 
 ### Code:
 
-module CmplxRoots
+module PolynomialRoots
 
 export roots, roots5
 
