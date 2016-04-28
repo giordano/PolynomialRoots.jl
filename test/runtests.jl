@@ -51,6 +51,18 @@ for i = 1:length(res)
     @test_approx_eq_eps 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3]) tol
 end
 
+# Test multiple precision.  See examples at page 5 of
+# http://www.cs.berkeley.edu/~wkahan/Qdrtcs.pdf
+tol = 1e-68
+poly1 = [big"94906268.375", big"-189812534", big"94906265.625"]
+res1  = roots(poly1)
+poly2 = [big"94906268.375", big"-189812534.75", big"94906266.375"]
+res2  = roots(poly2)
+for i = 1:length(res)
+    @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3]) tol
+    @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3]) tol
+end
+
 # 3rd-order polynomial
 poly = [24, -(6 + 28im), (7im - 4), 1]
 res  = roots(poly)
@@ -94,8 +106,8 @@ res1  = roots(poly1)
 res51 = roots5(poly1)
 poly2 = rand(Complex128, 6)*20 - complex(10, 10)
 for i = 1:length(poly2); println(" poly2[$i] = ", poly2[i]); end
-res2  = roots(poly2)
-res52 = roots5(poly2)
+res2  = roots(promote(poly2, zeros(Complex{BigFloat}, 5))...)
+res52 = roots5(promote(poly2, zeros(Complex{BigFloat}, 5))...)
 for i = 1:length(res1)
     @test_approx_eq_eps 0 (@evalpoly res1[1]  poly1[1] poly1[2] poly1[3] poly1[4] poly1[5] poly1[6]) tol
     @test_approx_eq_eps 0 (@evalpoly res51[1] poly1[1] poly1[2] poly1[3] poly1[4] poly1[5] poly1[6]) tol
@@ -124,11 +136,11 @@ x1, x2, x3 = CmplxRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.])
 @test_approx_eq x2 -2im
 @test_approx_eq x3 -1
 
-@test_approx_eq_eps CmplxRoots.cmplx_newton_spec([-1., 2im, 1.], 2, complex(1.))[1] -im 1e-7
-@test CmplxRoots.cmplx_newton_spec(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
+@test_approx_eq_eps CmplxRoots.newton_spec([-1., 2im, 1.], 2, complex(1.))[1] -im 1e-7
+@test CmplxRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
 
-@test CmplxRoots.cmplx_laguerre([-1., 2im, 1.], 2, complex(1.))[1] == -im
-@test CmplxRoots.cmplx_laguerre(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
+@test CmplxRoots.laguerre([-1., 2im, 1.], 2, complex(1.))[1] == -im
+@test CmplxRoots.laguerre(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
 
 @test CmplxRoots.find_2_closest_from_5(complex([1.,3,6,10,15])) == (1,2,4.0)
 @test CmplxRoots.find_2_closest_from_5(complex([1.,3,5,7,9]))   == (4,5,4.0)
@@ -139,5 +151,5 @@ a = complex([18., 5., 7., 10., 1.])
 @test CmplxRoots.sort_5_points_by_separation!(a) ==
     complex([18., 1., 10., 5., 7.])
 
-@test CmplxRoots.cmplx_laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2)[1] == -im
-@test CmplxRoots.cmplx_laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2)[1] == 3
+@test CmplxRoots.laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2)[1] == -im
+@test CmplxRoots.laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2)[1] == 3

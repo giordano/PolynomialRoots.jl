@@ -26,6 +26,9 @@ Fortran are not available as free software, according to the
 [definition](https://www.gnu.org/philosophy/free-sw.html) of the Free Software
 Foundation.
 
+`CmplxRoots.jl` can also take advantage of native arbitrary precision
+capabilities of Julia and achieve more precise results.
+
 Installation
 ------------
 
@@ -145,6 +148,58 @@ julia> roots5([1, 5, 10, 10, 5, 1])
  -1.0+0.0im
 ```
 
+### Arbitrary precision ###
+
+Due to limited precision of `Float64` type, extraction of roots of polynomials
+can give inaccurate results, even for low-order polynomials.  This is caused,
+i.e., by
+[catastrophic cancellation](https://en.wikipedia.org/wiki/Loss_of_significance)
+in computation of discriminant Δ = sqrt(b^2 - 4ac) of second-order polynomials.
+[For example](http://www.cs.berkeley.edu/~wkahan/Qdrtcs.pdf), the actual roots
+of
+
+```
+94906265.625*x^2 - 189812534*x + 94906268.375
+```
+
+are
+
+```
+x_1 = 1.000000028975958
+x_2 = 1.000000000000000
+```
+
+but when you try to calculate them in double-precision you get
+
+``` julia
+julia> r = roots([94906268.375, -189812534, 94906265.625]);
+
+julia> r[1]
+1.0000000144879793 - 0.0im
+
+julia> r[2]
+1.0000000144879788 + 0.0im
+```
+
+If you are interested in double-precision accuracy, you can work around this
+problem by calculating the roots with higher precision and then transforming the
+result to double-precision.  Julia natively supports arbitrary precision
+calculations, so what you have to do is only to pass `BigFloat` numbers to
+`roots` function:
+
+``` julia
+julia> r = roots([BigFloat(94906268.375), BigFloat(-189812534), BigFloat(94906265.625)]);
+
+julia> Float64(r[1])
+1.0000000289759583
+
+julia> Float64(r[2])
+1.0
+```
+
+Note that in this case there is a trade-off between speed and higher accuracy
+and precision.
+
 Related projects
 ----------------
 
@@ -154,7 +209,8 @@ other contributors.  This package does much more than finding roots of
 polynomials (among other features, it can integrate and differentiate
 polynomials).  In order to solve the polynomial, `Polynomials.jl` calculates
 eigenvalues of its companion matrix, but `CmplxRoots.jl` is usually faster by up
-to an order of magnitude and often slightly more precise.  If you are after
+to an order of magnitude and often slightly more precise.  In addition,
+`Polynomials` cannot extract roots in arbitrary precision.  If you are after
 speed and precision, `CmplxRoots.jl` can still be a better option.
 
 License

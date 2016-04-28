@@ -42,10 +42,10 @@ const FRAC_JUMPS = [0.64109297, # some random numbers
                     0.37794326, 0.04618805,  0.75132137]
 const FRAC_JUMP_LEN = length(FRAC_JUMPS)
 const FRAC_ERR = 2e-15
-const c_zero = zero(Complex128)
-const c_one  = one(Complex128)
 
-function divide_poly_1(p::Complex128, poly::Vector{Complex128}, degree::Integer)
+function divide_poly_1{T<:AbstractFloat}(p::Complex{T},
+                                         poly::Vector{Complex{T}},
+                                         degree::Integer)
     coef = poly[degree+1]
     polyout = poly[1:degree]
     for i = degree:-1:1
@@ -57,7 +57,7 @@ function divide_poly_1(p::Complex128, poly::Vector{Complex128}, degree::Integer)
     return polyout, remainder
 end
 
-function solve_quadratic_eq(poly::Vector{Complex128})
+function solve_quadratic_eq{T<:AbstractFloat}(poly::Vector{Complex{T}})
     a = poly[3]
     b = poly[2]
     c = poly[1]
@@ -76,7 +76,7 @@ function solve_quadratic_eq(poly::Vector{Complex128})
     return x0, x1
 end
 
-function solve_cubic_eq(poly::Vector{Complex128})
+function solve_cubic_eq{T<:AbstractFloat}(poly::Vector{Complex{T}})
     # Cubic equation solver for complex polynomial (degree=3)
     # http://en.wikipedia.org/wiki/Cubic_function   Lagrange's method
     a1  =  inv(poly[4])
@@ -102,9 +102,9 @@ function solve_cubic_eq(poly::Vector{Complex128})
     return third*(s0 + s1 + s2), third*(s0 + s1*zeta2 + s2*zeta1), third*(s0 + s1*zeta1 + s2*zeta2)
 end
 
-function cmplx_newton_spec(poly::Vector{Complex128},
-                           degree::Integer, root::Complex128)
-    root::Complex128
+function newton_spec{T<:AbstractFloat}(poly::Vector{Complex{T}},
+                                       degree::Integer, root::Complex{T})
+    root::Complex{T}
     iter = 0
     success = true
     good_to_go = false
@@ -114,7 +114,7 @@ function cmplx_newton_spec(poly::Vector{Complex128},
         # Prepare stoping criterion.  Calculate value of polynomial and its
         # first two derivatives
         p  = poly[degree+1]
-        dp = c_zero
+        dp = zero(Complex{T})
         if mod(i, 10) == 1 # Calculate stopping criterion every ten iterations
             ek = abs(poly[degree + 1])
             absroot = abs(root)
@@ -156,7 +156,7 @@ function cmplx_newton_spec(poly::Vector{Complex128},
         end # if abs2p == 0
         if dp == 0
             # problem with zero.  Make some random jump
-            dx::Complex128 = (abs(root) + 1)*exp(complex(0, FRAC_JUMPS[trunc(Integer, mod(i, FRAC_JUMP_LEN)) + 1]*2*pi))
+            dx::Complex{T} = (abs(root) + 1)*exp(complex(0, FRAC_JUMPS[trunc(Integer, mod(i, FRAC_JUMP_LEN)) + 1]*2*pi))
         else
             dx = p*inv(dp) # Newton method, see http://en.wikipedia.org/wiki/Newton's_method
         end
@@ -179,9 +179,10 @@ function cmplx_newton_spec(poly::Vector{Complex128},
     return root, iter, success
 end
 
-function cmplx_laguerre(poly::Vector{Complex128},
-                        degree::Integer, root::Complex128)
-    root::Complex128
+function laguerre{T<:AbstractFloat}(poly::Vector{Complex{T}},
+                                    degree::Integer, root::Complex{T})
+    root::Complex{T}
+    c_zero = zero(Complex{T})
     iter = 0
     success = true
     good_to_go = false
@@ -222,9 +223,9 @@ function cmplx_laguerre(poly::Vector{Complex128},
         else
             good_to_go = false # reset if we are outside the zone of the root
         end
-        faq::Complex128 = c_one
+        faq::Complex{T} = one(Complex{T})
         denom = c_zero
-        if dp != zero
+        if dp != 0
             invdp = inv(dp)
             fac_netwon = p*invdp
             fac_extra = d2p_half*invdp
@@ -237,7 +238,7 @@ function cmplx_laguerre(poly::Vector{Complex128},
             end
         end
         if denom == 0  # test if demoninators are > 0.0 not to divide by zero
-            dx::Complex128 = (absroot + 1)*exp(complex(0.0, FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]*2*pi)) # make some random jump
+            dx::Complex{T} = (absroot + 1)*exp(complex(0.0, FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]*2*pi)) # make some random jump
         else
             dx = fac_netwon*inv(denom)
         end
@@ -259,8 +260,12 @@ function cmplx_laguerre(poly::Vector{Complex128},
     return root, iter, success
 end
 
-function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
-                               root::Complex128, starting_mode::Integer)
+function laguerre2newton{T<:AbstractFloat}(poly::Vector{Complex{T}},
+                                           degree::Integer,
+                                           root::Complex{T},
+                                           starting_mode::Integer)
+    c_zero = zero(Complex{T})
+    c_one = one(Complex{T})
     iter=0
     success = true
     stopping_crit2 = 0.0
@@ -484,7 +489,7 @@ function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
                     return root, iter, success
                 end
                 if abs2p < stopping_crit2 # (simplified a little Eq. 10 of Adams 1967)
-                    if dp == zero
+                    if dp == 0
                         return root, iter, success
                     end
                     # do additional iteration if we are less than 10x from stopping criterion
@@ -524,7 +529,7 @@ function cmplx_laguerre2newton(poly::Vector{Complex128}, degree::Integer,
     return root, iter, success
 end
 
-function find_2_closest_from_5(points::Vector{Complex128})
+function find_2_closest_from_5{T<:AbstractFloat}(points::Vector{Complex{T}})
     n = 5
     d2min = Inf
     i1 = 0
@@ -542,10 +547,10 @@ function find_2_closest_from_5(points::Vector{Complex128})
     return i1, i2, d2min
 end
 
-function sort_5_points_by_separation_i(points::Vector{Complex128})
+function sort_5_points_by_separation_i{T<:AbstractFloat}(points::Vector{Complex{T}})
     n = 5
-    distances2 = ones(Float64, n, n)*Inf
-    dmin = Array(Float64, n)
+    distances2 = ones(T, n, n)*Inf
+    dmin = Array(T, n)
     for j = 1:n
         for i = 1:j-1
             distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
@@ -557,7 +562,7 @@ function sort_5_points_by_separation_i(points::Vector{Complex128})
     return sort(collect(1:n), lt=(i,j) -> dmin[i]>dmin[j])
 end
 
-function sort_5_points_by_separation!(points::Vector{Complex128})
+function sort_5_points_by_separation!{T<:AbstractFloat}(points::Vector{Complex{T}})
     n = 5
     sorted_points = sort_5_points_by_separation_i(points)
     savepoints = copy(points)
@@ -570,8 +575,9 @@ end
 # Original function has a `use_roots_as_starting_points' argument.  We don't
 # have this argument and always use `roots' as starting points, it's a task of
 # the interface to set a proper starting value if the user doesn't provide it.
-function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
-                degree::Integer, polish::Bool)
+function roots!{T<:AbstractFloat}(roots::Vector{Complex{T}},
+                                  poly::Vector{Complex{T}},
+                                  degree::Integer, polish::Bool)
     poly2 = copy(poly)
     # skip small degree polynomials from doing Laguerre's method
     if degree <= 1
@@ -581,9 +587,9 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
         return roots
     end
     for n = degree:-1:3
-        roots[n], iter, success = cmplx_laguerre2newton(poly2, n, roots[n], 2)
+        roots[n], iter, success = laguerre2newton(poly2, n, roots[n], 2)
         if ! success
-            roots[n], iter, success = cmplx_laguerre(poly2, n, c_zero)
+            roots[n], iter, success = laguerre(poly2, n, zero(Complex{T}))
         end
         # divide the polynomial by this root
         coef = poly2[n+1]
@@ -598,7 +604,7 @@ function roots!(roots::Vector{Complex128}, poly::Vector{Complex128},
     roots[1], roots[2] = solve_quadratic_eq(poly2)
     if polish
         for n = 1:degree # polish roots one-by-one with a full polynomial
-            roots[n], iter, success = cmplx_laguerre(poly, degree, roots[n])
+            roots[n], iter, success = laguerre(poly, degree, roots[n])
         end
     end
     return roots
@@ -608,16 +614,18 @@ function roots{N1<:Number,N2<:Number}(poly::Vector{N1}, roots::Vector{N2};
                                       polish::Bool=false)
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
-    roots!(float(complex(roots)), float(complex(poly)), degree, polish)
+    roots!(promote(float(complex(roots)), float(complex(poly)))..., degree, polish)
 end
 
-function roots{N1<:Number}(poly::Vector{N1}; polish::Bool=false)
+function roots{N<:Number}(poly::Vector{N}; polish::Bool=false)
     degree = length(poly) - 1
-    roots!(Array(Complex128, degree), float(complex(poly)), degree, polish)
+    roots!(Array(Complex{real(float(N))}, degree), float(complex(poly)),
+           degree, polish)
 end
 
-function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
-                 polish::Bool)
+function roots5!{T<:AbstractFloat}(roots::Vector{Complex{T}},
+                                   poly::Vector{Complex{T}}, polish::Bool)
+    c_zero = zero(Complex{T})
     degree = 5
     roots_robust = copy(roots)
     go_to_robust = 0
@@ -636,9 +644,9 @@ function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
             end
             poly2 = copy(poly) # copy coeffs
             for m = degree:-1:4 # find the roots one-by-one (until 3 are left to be found)
-                roots[m], iter, succ = cmplx_laguerre2newton(poly2, m, roots[m], 2)
+                roots[m], iter, succ = laguerre2newton(poly2, m, roots[m], 2)
                 if ! succ
-                    roots[m], iter, succ = cmplx_laguerre(poly2, m, c_zero)
+                    roots[m], iter, succ = laguerre(poly2, m, c_zero)
                 end
                 # divide polynomial by this root
                 poly2, remainder = divide_poly_1(roots[m], poly2, m)
@@ -659,7 +667,7 @@ function roots5!(roots::Vector{Complex128}, poly::Vector{Complex128},
         poly2 = copy(poly) # copy coeffs
         for m = 1:degree-2
             # polish roots with full polynomial
-            roots[m], iter, succ = cmplx_newton_spec(poly2, degree, roots[m])
+            roots[m], iter, succ = newton_spec(poly2, degree, roots[m])
             if ! succ
                 # go back to robust
                 go_to_robust = go_to_robust + 1
@@ -718,12 +726,12 @@ function roots5{N1<:Number,N2<:Number}(poly::Vector{N1},
                                        roots::Vector{N2})
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     @assert length(roots) == 5 "`roots' vector must have 5 elements"
-    return roots5!(float(complex(roots)), float(complex(poly)), true)
+    return roots5!(promote(float(complex(roots)), float(complex(poly)))..., true)
 end
 
 function roots5{N<:Number}(poly::Vector{N})
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
-    return roots5!(zeros(Complex128,  5), float(complex(poly)), false)
+    return roots5!(zeros(Complex{real(float(N))},  5), float(complex(poly)), false)
 end
 
 """
