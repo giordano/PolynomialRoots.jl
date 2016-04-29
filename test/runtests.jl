@@ -37,14 +37,14 @@ end
 # 2nd-order polynomials
 poly1 = [-15im, (5 - 3im), 1]
 res1  = roots(poly1)
-poly2 = [0, complex(5, -rand()), 1]
+poly2 = [0, complex(5, -0.5), 1]
 res2  = roots(poly2)
 poly3 = [0, 0, 7]
 res3  = roots(poly3)
 # Note: this test would fail on Travis with Julia nightly with
 # "@test_approx_eq", but it runs flawless on my system with latest Julia
 # version.
-for i = 1:length(res)
+for i = 1:length(res1)
     @test_approx_eq 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3])
     @test_approx_eq 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3])
     @test_approx_eq 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3])
