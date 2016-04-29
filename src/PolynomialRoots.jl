@@ -20,13 +20,13 @@
 
 ### References:
 
-#  * Skowron, J. & Gould, A. 2012, " General Complex Polynomial Root Solver and
+#  * Skowron, J. & Gould, A. 2012, "General Complex Polynomial Root Solver and
 #    Its Further Optimization for Binary Microlenses", arXiv:1203.1034.
 #    URL: http://arxiv.org/abs/1203.1034
 #  * Adams, D. A., 1967, "A stopping criterion for polynomial root finding",
 #    Communications of the ACM, Volume 10, Issue 10, Oct. 1967, p. 655
 #    DOI:10.1145/363717.363775. URL:
-#    ftp://reports.stanford.edu/pub/cstr/reports/cs/tr/67/55/CS-TR-67-55.pdf
+#    http://i.stanford.edu/pub/cstr/reports/cs/tr/67/55/CS-TR-67-55.pdf
 
 ### Code:
 
@@ -44,7 +44,6 @@ const FRAC_JUMPS = [0.64109297, # some random numbers
                     0.08177045, 0.13653241,  0.306162  ,
                     0.37794326, 0.04618805,  0.75132137]
 const FRAC_JUMP_LEN = length(FRAC_JUMPS)
-const FRAC_ERR = 2e-15
 
 function divide_poly_1{T<:AbstractFloat}(p::Complex{T},
                                          poly::Vector{Complex{T}},
@@ -105,8 +104,10 @@ function solve_cubic_eq{T<:AbstractFloat}(poly::Vector{Complex{T}})
     return third*(s0 + s1 + s2), third*(s0 + s1*zeta2 + s2*zeta1), third*(s0 + s1*zeta1 + s2*zeta2)
 end
 
-function newton_spec{T<:AbstractFloat}(poly::Vector{Complex{T}},
-                                       degree::Integer, root::Complex{T})
+function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
+                                                        degree::Integer,
+                                                        root::Complex{T},
+                                                        epsilon::E)
     root::Complex{T}
     iter = 0
     success = true
@@ -129,7 +130,7 @@ function newton_spec{T<:AbstractFloat}(poly::Vector{Complex{T}},
                 # Adams (1967), equation (8).
                 ek = absroot*ek + abs(p)
             end
-            stopping_crit2 = (FRAC_ERR*ek)*(FRAC_ERR*ek)
+            stopping_crit2 = (epsilon*ek)*(epsilon*ek)
         else # Calculate just the value and derivative
             # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
             # evaluate polynomials and derivatives
@@ -182,8 +183,9 @@ function newton_spec{T<:AbstractFloat}(poly::Vector{Complex{T}},
     return root, iter, success
 end
 
-function laguerre{T<:AbstractFloat}(poly::Vector{Complex{T}},
-                                    degree::Integer, root::Complex{T})
+function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
+                                                     degree::Integer,
+                                                     root::Complex{T}, epsilon::E)
     root::Complex{T}
     c_zero = zero(Complex{T})
     iter = 0
@@ -215,7 +217,7 @@ function laguerre{T<:AbstractFloat}(poly::Vector{Complex{T}},
         if abs2p == 0
             return root, iter, success
         end
-        stopping_crit2 = (FRAC_ERR*ek)*(FRAC_ERR*ek)
+        stopping_crit2 = (epsilon*ek)*(epsilon*ek)
         if abs2p < stopping_crit2 # simplified a little Eq. 10 of Adams (1967)
             # do additional iteration if we are less than 10x from stopping criterion
             if abs2p < 0.01*stopping_crit2
@@ -263,10 +265,11 @@ function laguerre{T<:AbstractFloat}(poly::Vector{Complex{T}},
     return root, iter, success
 end
 
-function laguerre2newton{T<:AbstractFloat}(poly::Vector{Complex{T}},
-                                           degree::Integer,
-                                           root::Complex{T},
-                                           starting_mode::Integer)
+function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
+                                                            degree::Integer,
+                                                            root::Complex{T},
+                                                            starting_mode::Integer,
+                                                            epsilon::E)
     c_zero = zero(Complex{T})
     c_one = one(Complex{T})
     iter=0
@@ -309,7 +312,7 @@ function laguerre2newton{T<:AbstractFloat}(poly::Vector{Complex{T}},
                 if abs2p == 0
                     return root, iter, success
                 end
-                stopping_crit2 = (FRAC_ERR*ek)*(FRAC_ERR*ek)
+                stopping_crit2 = (epsilon*ek)*(epsilon*ek)
                 if abs2p < stopping_crit2 # (simplified a little Eq. 10 of Adams 1967)
                     # do additional iteration if we are less than 10x from stopping criterion
                     if abs2p < 0.01stopping_crit2 # ten times better than stopping criterion
@@ -394,7 +397,7 @@ function laguerre2newton{T<:AbstractFloat}(poly::Vector{Complex{T}},
                         # Adams (1967) equation (8).
                         ek = absroot*ek + abs(p)
                     end
-                    stopping_crit2 = (FRAC_ERR*ek)*(FRAC_ERR*ek)
+                    stopping_crit2 = (epsilon*ek)*(epsilon*ek)
                 else
                     for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
                                         # Recipes Sec. 5.3 how to evaluate
@@ -477,7 +480,7 @@ function laguerre2newton{T<:AbstractFloat}(poly::Vector{Complex{T}},
                         # Adams (1967), equation (8).
                         ek = absroot*ek + abs(p)
                     end
-                    stopping_crit2 = (FRAC_ERR*ek)*(FRAC_ERR*ek)
+                    stopping_crit2 = (epsilon*ek)*(epsilon*ek)
                 else #
                     for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
                                         # Recipes Sec. 5.3 how to evaluate
@@ -578,9 +581,11 @@ end
 # Original function has a `use_roots_as_starting_points' argument.  We don't
 # have this argument and always use `roots' as starting points, it's a task of
 # the interface to set a proper starting value if the user doesn't provide it.
-function roots!{T<:AbstractFloat}(roots::Vector{Complex{T}},
-                                  poly::Vector{Complex{T}},
-                                  degree::Integer, polish::Bool)
+function roots!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
+                                                   poly::Vector{Complex{T}},
+                                                   epsilon::E, degree::Integer,
+                                                   polish::Bool)
+    isnan(epsilon) && (epsilon = eps(one(T)))
     poly2 = copy(poly)
     # skip small degree polynomials from doing Laguerre's method
     if degree <= 1
@@ -590,9 +595,10 @@ function roots!{T<:AbstractFloat}(roots::Vector{Complex{T}},
         return roots
     end
     for n = degree:-1:3
-        roots[n], iter, success = laguerre2newton(poly2, n, roots[n], 2)
+        roots[n], iter, success = laguerre2newton(poly2, n, roots[n], 2, epsilon)
         if ! success
-            roots[n], iter, success = laguerre(poly2, n, zero(Complex{T}))
+            roots[n], iter, success = laguerre(poly2, n,
+                                               zero(Complex{T}), epsilon)
         end
         # divide the polynomial by this root
         coef = poly2[n+1]
@@ -607,27 +613,34 @@ function roots!{T<:AbstractFloat}(roots::Vector{Complex{T}},
     roots[1], roots[2] = solve_quadratic_eq(poly2)
     if polish
         for n = 1:degree # polish roots one-by-one with a full polynomial
-            roots[n], iter, success = laguerre(poly, degree, roots[n])
+            roots[n], iter, success = laguerre(poly, degree, roots[n], epsilon)
         end
     end
     return roots
 end
 
-function roots{N1<:Number,N2<:Number}(poly::Vector{N1}, roots::Vector{N2};
-                                      polish::Bool=false)
+function roots{N1<:Number,N2<:Number,E<:AbstractFloat}(poly::Vector{N1},
+                                                       roots::Vector{N2};
+                                                       epsilon::E=NaN,
+                                                       polish::Bool=false)
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
-    roots!(promote(float(complex(roots)), float(complex(poly)))..., degree, polish)
+    roots!(promote(float(complex(roots)), float(complex(poly)))...,
+           float(epsilon), degree, polish)
 end
 
-function roots{N<:Number}(poly::Vector{N}; polish::Bool=false)
+function roots{N<:Number,E<:AbstractFloat}(poly::Vector{N};
+                                           epsilon::E=NaN,
+                                           polish::Bool=false)
     degree = length(poly) - 1
     roots!(zeros(Complex{real(float(N))}, degree), float(complex(poly)),
-           degree, polish)
+           epsilon, degree, polish)
 end
 
-function roots5!{T<:AbstractFloat}(roots::Vector{Complex{T}},
-                                   poly::Vector{Complex{T}}, polish::Bool)
+function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
+                                                    poly::Vector{Complex{T}},
+                                                    epsilon::E, polish::Bool)
+    isnan(epsilon) && (epsilon = eps(one(T)))
     c_zero = zero(Complex{T})
     degree = 5
     roots_robust = copy(roots)
@@ -647,9 +660,10 @@ function roots5!{T<:AbstractFloat}(roots::Vector{Complex{T}},
             end
             poly2 = copy(poly) # copy coeffs
             for m = degree:-1:4 # find the roots one-by-one (until 3 are left to be found)
-                roots[m], iter, succ = laguerre2newton(poly2, m, roots[m], 2)
+                roots[m], iter, succ = laguerre2newton(poly2, m, roots[m],
+                                                       2, epsilon)
                 if ! succ
-                    roots[m], iter, succ = laguerre(poly2, m, c_zero)
+                    roots[m], iter, succ = laguerre(poly2, m, c_zero, epsilon)
                 end
                 # divide polynomial by this root
                 poly2, remainder = divide_poly_1(roots[m], poly2, m)
@@ -670,7 +684,7 @@ function roots5!{T<:AbstractFloat}(roots::Vector{Complex{T}},
         poly2 = copy(poly) # copy coeffs
         for m = 1:degree-2
             # polish roots with full polynomial
-            roots[m], iter, succ = newton_spec(poly2, degree, roots[m])
+            roots[m], iter, succ = newton_spec(poly2, degree, roots[m], epsilon)
             if ! succ
                 # go back to robust
                 go_to_robust = go_to_robust + 1
@@ -725,16 +739,19 @@ function roots5!{T<:AbstractFloat}(roots::Vector{Complex{T}},
     return roots
 end
 
-function roots5{N1<:Number,N2<:Number}(poly::Vector{N1},
-                                       roots::Vector{N2})
+function roots5{N1<:Number,N2<:Number,E<:AbstractFloat}(poly::Vector{N1},
+                                                        roots::Vector{N2};
+                                                        epsilon::E=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     @assert length(roots) == 5 "`roots' vector must have 5 elements"
-    return roots5!(promote(float(complex(roots)), float(complex(poly)))..., true)
+    return roots5!(promote(float(complex(roots)), float(complex(poly)))...,
+                   epsilon, true)
 end
 
-function roots5{N<:Number}(poly::Vector{N})
+function roots5{N<:Number,E<:AbstractFloat}(poly::Vector{N}; epsilon::E=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
-    return roots5!(zeros(Complex{real(float(N))},  5), float(complex(poly)), false)
+    return roots5!(zeros(Complex{real(float(N))},  5), float(complex(poly)),
+                   float(epsilon), false)
 end
 
 """

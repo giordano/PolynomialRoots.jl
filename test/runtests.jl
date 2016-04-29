@@ -35,7 +35,6 @@ for i = 1:length(res)
 end
 
 # 2nd-order polynomials
-tol = 1e-14
 poly1 = [-15im, (5 - 3im), 1]
 res1  = roots(poly1)
 poly2 = [0, complex(5, -rand()), 1]
@@ -46,18 +45,18 @@ res3  = roots(poly3)
 # "@test_approx_eq", but it runs flawless on my system with latest Julia
 # version.
 for i = 1:length(res)
-    @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3]) tol
-    @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3]) tol
-    @test_approx_eq_eps 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3]) tol
+    @test_approx_eq 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3])
+    @test_approx_eq 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3])
+    @test_approx_eq 0 (@evalpoly res3[i] poly3[1] poly3[2] poly3[3])
 end
 
 # Test multiple precision.  See examples at page 5 of
 # http://www.cs.berkeley.edu/~wkahan/Qdrtcs.pdf
 tol = 1e-68
 poly1 = [big"94906268.375", big"-189812534", big"94906265.625"]
-res1  = roots(poly1)
+res1  = roots(poly1, epsilon=1e-70)
 poly2 = [big"94906268.375", big"-189812534.75", big"94906266.375"]
-res2  = roots(poly2)
+res2  = roots(poly2, epsilon=1e-70)
 for i = 1:length(res)
     @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3]) tol
     @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3]) tol
@@ -75,7 +74,7 @@ tol = 1e-13
 poly1 = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
 res1  = roots(poly1)
 poly2 = [BigInt(6), -28, 496im, 8128, -33550336im]
-res2  = roots(poly2)
+res2  = roots(poly2, epsilon=1e-14)
 for i = 1:length(res)
     @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3] poly1[4] poly1[5]) tol
     @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3] poly2[4] poly2[5]) tol
@@ -139,11 +138,11 @@ x1, x2, x3 = PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.])
 @test_approx_eq x2 -2im
 @test_approx_eq x3 -1
 
-@test_approx_eq_eps PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.))[1] -im 1e-7
-@test PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
+@test_approx_eq_eps PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] -im 1e-7
+@test PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0))[1] == 3
 
-@test PolynomialRoots.laguerre([-1., 2im, 1.], 2, complex(1.))[1] == -im
-@test PolynomialRoots.laguerre(complex([6., -5., 1.]), 2, complex(2.8))[1] == 3
+@test PolynomialRoots.laguerre([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] == -im
+@test PolynomialRoots.laguerre(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0))[1] == 3
 
 @test PolynomialRoots.find_2_closest_from_5(complex([1.,3,6,10,15])) == (1,2,4.0)
 @test PolynomialRoots.find_2_closest_from_5(complex([1.,3,5,7,9]))   == (4,5,4.0)
@@ -154,5 +153,5 @@ a = complex([18., 5., 7., 10., 1.])
 @test PolynomialRoots.sort_5_points_by_separation!(a) ==
     complex([18., 1., 10., 5., 7.])
 
-@test PolynomialRoots.laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2)[1] == -im
-@test PolynomialRoots.laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2)[1] == 3
+@test PolynomialRoots.laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2, eps(1.0))[1] == -im
+@test PolynomialRoots.laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2, eps(1.0))[1] == 3
