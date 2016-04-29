@@ -72,10 +72,13 @@ end
 
 # 4th-order polynomial
 tol = 1e-13
-poly = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
-res  = roots(poly)
+poly1 = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
+res1  = roots(poly1)
+poly2 = [BigInt(6), -28, 496im, 8128, -33550336im]
+res2  = roots(poly2)
 for i = 1:length(res)
-    @test_approx_eq_eps 0 (@evalpoly res[i] poly[1] poly[2] poly[3] poly[4] poly[5]) tol
+    @test_approx_eq_eps 0 (@evalpoly res1[i] poly1[1] poly1[2] poly1[3] poly1[4] poly1[5]) tol
+    @test_approx_eq_eps 0 (@evalpoly res2[i] poly2[1] poly2[2] poly2[3] poly2[4] poly2[5]) tol
 end
 
 # First 5th-order polynomial

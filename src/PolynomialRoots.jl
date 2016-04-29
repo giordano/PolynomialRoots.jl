@@ -622,7 +622,7 @@ end
 
 function roots{N<:Number}(poly::Vector{N}; polish::Bool=false)
     degree = length(poly) - 1
-    roots!(Array(Complex{real(float(N))}, degree), float(complex(poly)),
+    roots!(zeros(Complex{real(float(N))}, degree), float(complex(poly)),
            degree, polish)
 end
 
