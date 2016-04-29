@@ -792,4 +792,28 @@ Function `roots` can be used to find roots of polynomials of any degree.
 """
 roots5
 
+# Use algorithm described in Knuth, TAOCP vol. 2, section 4.6.4, equation (3) to
+# evaluate polynomial with coefficients u at point z.  This is the same
+# algorithm used in @evalpoly macro.
+function evalpoly{Z<:AbstractFloat,U<:Number}(z::Complex{Z}, u::Vector{U})
+    T = promote_type(Complex{Z}, U)
+    z = convert(T, z)
+    u = convert(Vector{T}, u)
+    x, y = reim(z)
+    r = x + x
+    s = x*x + y*y
+    degree = length(u) - 1
+    a = similar(u, degree)
+    b = similar(u, degree)
+    a[1] = u[end]
+    b[1] = u[end-1]
+    for j = 2:degree
+        a[j] = b[j-1] + r*a[j-1]
+        b[j] = u[end-j] -s*a[j-1]
+    end
+    z*a[end] + b[end]
+end
+evalpoly{Z<:AbstractFloat,U<:Number}(z::Vector{Complex{Z}}, u::Vector{U}) =
+    map(x->evalpoly(x, u), z)
+
 end # module

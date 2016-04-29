@@ -29,6 +29,10 @@ Foundation.
 `PolynomialRoots.jl` can also take advantage of native arbitrary precision
 capabilities of Julia and achieve more precise results.
 
+**Note**: the adopted algorithm can give highly inaccurate results for
+polynomials of order above ~30.  This can be mitigated by using multiple
+precision calculations (see example below).
+
 Installation
 ------------
 
@@ -59,8 +63,8 @@ or put this command into your Julia script.
 polynomials
 
 ``` julia
-roots(polynomial[, roots, polish=true])
-roots5(polynomial[, roots])
+roots(polynomial[, roots, polish=true, epsilon=1e-20])
+roots5(polynomial[, roots, epsilon=1e-20])
 ```
 
 `roots` can be used to solve polynomials of any degree, `roots5` is tailored to
@@ -86,13 +90,17 @@ Optional arguments are:
 * `polish` (boolean keyword, only for `roots`): if set to `true`, after all
   roots have been found by dividing original polynomial by each root found, all
   roots will be polished using full polynomial.  Default is `false`
+* `epsilon` (floating point optional keyword): this is used to determine the
+  stopping criterion described in Skowron & Gould paper.  If not set, it
+  defaults to machine precision of `polynomial` (and `roots`) argument(s).  This
+  is *not* the precision with which the roots will be calculated.
 
-The functions return in output the `Complex128` vector with all roots of
+The functions return in output the `Complex` vector with all roots of
 `polynomial`.  **Note:** if `roots` optional argument is provided, it is *not*
 changed in-place.
 
-Example
--------
+Examples
+--------
 
 Find the roots of
 
@@ -184,7 +192,7 @@ julia> r[2]
 
 If you are interested in double-precision accuracy, you can work around this
 problem by calculating the roots with higher precision and then transforming the
-result to double-precision.  Julia natively supports arbitrary precision
+result to double-precision.  Julia natively supports multiple precision
 calculations, so what you have to do is only to pass `BigFloat` numbers to
 `roots` function:
 
@@ -213,6 +221,15 @@ eigenvalues of its companion matrix, but `PolynomialRoots.jl` is usually faster
 by up to an order of magnitude and often slightly more precise.  In addition,
 `Polynomials` cannot extract roots in arbitrary precision.  If you are after
 speed and precision, `PolynomialRoots.jl` can still be a better option.
+
+How can I help?
+---------------
+
+You can report bugs or suggest improvements at
+https://github.com/giordano/PolynomialRoots.jl/issues.  You can also implement
+other (possibly faster and/or more precise in more cases) root finding
+algorithms and send a pull request at
+https://github.com/giordano/PolynomialRoots.jl/pulls.
 
 License
 -------
