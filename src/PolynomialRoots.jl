@@ -1,33 +1,65 @@
-### PolynomialRoots.jl --- Complex Polynomial Root Solver
-
-# Copyright (C) 2016  Mosè Giordano
-
+### PolynomialRoots.jl --- Fast Complex Polynomial Root Finder
+#
+# Copyright (C) 2012: Jan Skowron & Andrew Gould
+# Copyright (C) 2016: Mosè Giordano
+#
 # Maintainer: Mosè Giordano <mose AT gnu DOT org>
-# Keywords: polynomials, root finding
-
+# Keywords: polynomials, root finding, multiple precision
+#
+### License notices
+#
+## Apache 2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+## LGPLv3+
+#
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
 # License for more details.
-
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+#
+## Customary scientific license
+#
+# If this code was important in the scientific process or for the results of
+# your scientific work, you are asked for the appropriate citation of the paper
+# Skowron & Gould 2012 (http://arxiv.org/abs/1203.1034).
+#
+### Commentary:
+#
+# This program started as a translation into Julia of the Fortran package
+# "General Complex Polynomial Root Solver"
+# (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) by Jan Skowron and
+# Andrew Gould.
+#
 ### References:
-
+#
 #  * Skowron, J. & Gould, A. 2012, "General Complex Polynomial Root Solver and
 #    Its Further Optimization for Binary Microlenses", arXiv:1203.1034.
 #    URL: http://arxiv.org/abs/1203.1034
 #  * Adams, D. A., 1967, "A stopping criterion for polynomial root finding",
 #    Communications of the ACM, Volume 10, Issue 10, Oct. 1967, p. 655
-#    DOI:10.1145/363717.363775. URL:
-#    http://i.stanford.edu/pub/cstr/reports/cs/tr/67/55/CS-TR-67-55.pdf
-
+#    DOI:10.1145/363717.363775.
+#    URL: http://i.stanford.edu/pub/cstr/reports/cs/tr/67/55/CS-TR-67-55.pdf
+#
 ### Code:
 
 module PolynomialRoots

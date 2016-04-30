@@ -10,9 +10,8 @@ written in [Julia](http://julialang.org/).
 
 This is an implementation in Julia of the
 [General Complex Polynomial Root Solver](http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/),
-written in Fortran, by **Jan Skowron** and **Andy Gould**.  All the credits goes
-to them for the original algorithm.  Feel free to report bugs and make
-suggestions at https://github.com/giordano/PolynomialRoots.jl/issues.
+written in Fortran, by **Jan Skowron** and **Andrew Gould**.  All the credits
+goes to them for the original algorithm.
 
 The root finding algorithm employed in this library is described in
 
@@ -225,7 +224,7 @@ speed and precision, `PolynomialRoots.jl` can still be a better option.
 How can I help?
 ---------------
 
-You can report bugs or suggest improvements at
+Feel free to report bugs and sugges improvements at
 https://github.com/giordano/PolynomialRoots.jl/issues.  You can also implement
 other (possibly faster and/or more precise in more cases) root finding
 algorithms and send a pull request at
@@ -234,10 +233,16 @@ https://github.com/giordano/PolynomialRoots.jl/pulls.
 License
 -------
 
-The `PolynomialRoots.jl` package is licensed under the GNU Lesser General Public
-License version 3 or any later version, as well as under a "customary scientific
-license", which implies that if this code was important in the scientific
-process or for the results of your scientific work, you are asked for the
-appropriate citation of the paper Skowron & Gould 2012
-(http://arxiv.org/abs/1203.1034).  The original author of `PolynomialRoots.jl`
-is Mosè Giordano.
+The `PolynomialRoots.jl` package is licensed under version 2.0 of the Apache
+License or the GNU Lesser General Public License version 3 or any later version,
+as well as under a "customary scientific license", which implies that if this
+code was important in the scientific process or for the results of your
+scientific work, you are asked for the appropriate citation of the paper Skowron
+& Gould 2012 (http://arxiv.org/abs/1203.1034).  These are the same licenses used
+by the General Complex Polynomial Root Solver.
+
+The authors of original Fortran library
+(http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
+`PolynomialRoots.jl` has been translated are Jan Skowron, Andrew Gould.
+
+The original author of `PolynomialRoots.jl` is Mosè Giordano.
