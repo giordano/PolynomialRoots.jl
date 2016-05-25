@@ -112,7 +112,7 @@ res52 = roots5(promote(poly2, zeros(Complex{BigFloat}, 5))...)
                                             complex(3, 4)],
                                            complex(7, 8))
 
-@test PolynomialRoots.solve_quadratic_eq([-15., 8.im, 1.]) == (-5im, -3im)
+@test PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0]) == (-5im, -3im)
 
 x1, x2, x3 = PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.])
 @test_approx_eq x1  3
