@@ -67,6 +67,8 @@
 #
 ### Code:
 
+__precompile__()
+
 module PolynomialRoots
 
 export roots, roots5
