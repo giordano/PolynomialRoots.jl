@@ -3,10 +3,14 @@
 # Copyright (C) 2012: Jan Skowron & Andrew Gould
 # Copyright (C) 2016: Mosè Giordano
 #
-# Maintainer: Mosè Giordano <mose AT gnu DOT org>
+# Author: Mosè Giordano <mose AT gnu DOT org>
 # Keywords: polynomials, root finding, multiple precision
 #
-### License notices
+### Licenses
+#
+# PolynomialRoots.jl is released under terms of Apache License, Version 2.0 or
+# GNU Lesser General Public License, at your option.  Here follow license
+# notices.
 #
 ## Apache 2.0
 #
@@ -37,18 +41,19 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-## Customary scientific license
-#
-# If this code was important in the scientific process or for the results of
-# your scientific work, you are asked for the appropriate citation of the paper
-# Skowron & Gould 2012 (http://arxiv.org/abs/1203.1034).
-#
 ### Commentary:
 #
 # This program started as a translation into Julia of the Fortran package
 # "General Complex Polynomial Root Solver"
 # (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) by Jan Skowron and
 # Andrew Gould.
+#
+# A custom in the scientific comunity is (regardless of the licence you chose to
+# use or distribute this software under) that if this code was important in the
+# scientific process or for the results of your scientific work, we kindly ask
+# you for the appropriate citation of the paper Skowron & Gould 2012 (see
+# below), and we would be greatful if you pass the information about the proper
+# citation to anyone whom you redistribute this software to.
 #
 ### References:
 #

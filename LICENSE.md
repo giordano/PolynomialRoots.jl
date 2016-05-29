@@ -1,14 +1,11 @@
 The `PolynomialRoots.jl` package is licensed under version 2.0 of the Apache
 License or the GNU Lesser General Public License version 3 or any later version,
-as well as under a "customary scientific license", which implies that if this
-code was important in the scientific process or for the results of your
-scientific work, you are asked for the appropriate citation of the paper Skowron
-& Gould 2012 (http://arxiv.org/abs/1203.1034).  These are the same licenses used
-by the General Complex Polynomial Root Solver.
+at your option.  These are the same licenses used by the General Complex
+Polynomial Root Solver.
 
-The authors of original Fortran library
-(http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
-`PolynomialRoots.jl` has been translated are Jan Skowron, Andrew Gould.
+The authors of the General Complex Polynomial Root Solver, the original Fortran
+library (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
+`PolynomialRoots.jl` has been translated, are Jan Skowron, Andrew Gould.
 
 The original author of `PolynomialRoots.jl` is Mosè Giordano.
 
