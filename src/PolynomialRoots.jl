@@ -167,7 +167,7 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
                 # Adams (1967), equation (8).
                 ek = absroot*ek + abs(p)
             end
-            stopping_crit2 = (epsilon*ek)*(epsilon*ek)
+            stopping_crit2 = abs2(epsilon*ek)
         else # Calculate just the value and derivative
             # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
             # evaluate polynomials and derivatives
@@ -253,7 +253,7 @@ function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
         if abs2p == 0
             return root, iter, success
         end
-        stopping_crit2 = (epsilon*ek)*(epsilon*ek)
+        stopping_crit2 = abs2(epsilon*ek)
         if abs2p < stopping_crit2 # simplified a little Eq. 10 of Adams (1967)
             # do additional iteration if we are less than 10x from stopping criterion
             if abs2p < 0.01*stopping_crit2
@@ -346,7 +346,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                 if abs2p == 0
                     return root, iter, success
                 end
-                stopping_crit2 = (epsilon*ek)*(epsilon*ek)
+                stopping_crit2 = abs2(epsilon*ek)
                 if abs2p < stopping_crit2 # (simplified a little Eq. 10 of Adams 1967)
                     # do additional iteration if we are less than 10x from stopping criterion
                     if abs2p < 0.01stopping_crit2 # ten times better than stopping criterion
@@ -430,7 +430,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                         # Adams (1967) equation (8).
                         ek = absroot*ek + abs(p)
                     end
-                    stopping_crit2 = (epsilon*ek)*(epsilon*ek)
+                    stopping_crit2 = abs2(epsilon*ek)
                 else
                     for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
                                         # Recipes Sec. 5.3 how to evaluate
@@ -512,7 +512,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                         # Adams (1967), equation (8).
                         ek = absroot*ek + abs(p)
                     end
-                    stopping_crit2 = (epsilon*ek)*(epsilon*ek)
+                    stopping_crit2 = abs2(epsilon*ek)
                 else #
                     for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
                                         # Recipes Sec. 5.3 how to evaluate
