@@ -224,14 +224,17 @@ by up to an order of magnitude and often slightly more precise.  In addition,
 `Polynomials` cannot extract roots in arbitrary precision.  If you are after
 speed and precision, `PolynomialRoots.jl` can still be a better option.
 
-How can I help?
----------------
+Development
+-----------
 
-Feel free to report bugs and sugges improvements at
-https://github.com/giordano/PolynomialRoots.jl/issues.  You can also implement
-other (possibly faster and/or more precise in more cases) root finding
-algorithms and send a pull request at
-https://github.com/giordano/PolynomialRoots.jl/pulls.
+The package is developed at https://github.com/giordano/PolynomialRoots.jl.
+There you can submit bug reports, make suggestions, and propose pull requests.
+
+### History ###
+
+The ChangeLog of the package is available in
+[NEWS.md](https://github.com/giordano/PolynomialRoots.jl/blob/master/NEWS.md)
+file in top directory.
 
 License
 -------
