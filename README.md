@@ -1,6 +1,9 @@
-# PolynomialRoots
+# PolynomialRoots.jl
 
-[![Travis Build Status on GNU/Linux and OS X](https://travis-ci.org/giordano/PolynomialRoots.jl.svg?branch=master)](https://travis-ci.org/giordano/PolynomialRoots.jl) [![Appveyor Build Status on Windows](https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true)](https://ci.appveyor.com/project/giordano/polynomialroots-jl) [![Coverage Status](https://coveralls.io/repos/github/giordano/PolynomialRoots.jl/badge.svg?branch=master)](https://coveralls.io/github/giordano/PolynomialRoots.jl?branch=master) [![codecov.io](https://codecov.io/github/giordano/PolynomialRoots.jl/coverage.svg?branch=master)](https://codecov.io/github/giordano/PolynomialRoots.jl?branch=master) [![PolynomialRoots](http://pkg.julialang.org/badges/PolynomialRoots_0.4.svg)](http://pkg.julialang.org/?pkg=PolynomialRoots) [![PolynomialRoots](http://pkg.julialang.org/badges/PolynomialRoots_0.5.svg)](http://pkg.julialang.org/?pkg=PolynomialRoots)
+| [**Package Evaluator**][pkgeval-link] | **Build Status**                          | **Code Coverage**               |
+|:-------------------------------------:|:-----------------------------------------:|:-------------------------------:|
+| [![][pkg-0.4-img]][pkg-0.4-url]       | [![Build Status][travis-img]][travis-url] | [![][coveral-img]][coveral-url] |
+| [![][pkg-0.5-img]][pkg-0.5-url]       | [![Build Status][appvey-img]][appvey-url] | [![][codecov-img]][codecov-url] |
 
 Introduction
 ------------
@@ -251,3 +254,24 @@ library (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
 `PolynomialRoots.jl` has been translated, are Jan Skowron, Andrew Gould.
 
 The original author of `PolynomialRoots.jl` is Mosè Giordano.
+
+
+
+[pkgeval-link]: http://pkg.julialang.org/?pkg=PolynomialRoots
+
+[pkg-0.4-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.4.svg
+[pkg-0.4-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
+[pkg-0.5-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.5.svg
+[pkg-0.5-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
+
+[travis-img]: https://travis-ci.org/giordano/PolynomialRoots.jl.svg?branch=master
+[travis-url]: https://travis-ci.org/giordano/PolynomialRoots.jl
+
+[appvey-img]: https://ci.appveyor.com/api/projects/status/jfa9e54lv92rqd3m?svg=true
+[appvey-url]: https://ci.appveyor.com/project/giordano/polynomialroots-jl
+
+[coveral-img]: https://coveralls.io/repos/github/giordano/PolynomialRoots.jl/badge.svg?branch=master
+[coveral-url]: https://coveralls.io/github/giordano/PolynomialRoots.jl?branch=master
+
+[codecov-img]: https://codecov.io/gh/giordano/PolynomialRoots.jl/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/giordano/PolynomialRoots.jl
