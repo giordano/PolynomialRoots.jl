@@ -74,8 +74,6 @@ module PolynomialRoots
 export roots, roots5
 
 const third = 1//3
-const zeta1 = complex(-0.5, sqrt(3)*0.5)
-const zeta2 = conj(zeta1)
 const MAX_ITERS = 50
 const FRAC_JUMP_EVERY = 10
 const FRAC_JUMPS = [0.64109297, # some random numbers
@@ -140,6 +138,8 @@ function solve_cubic_eq{T<:AbstractFloat}(poly::Vector{Complex{T}})
     else
         s2 = B*inv(s1)
     end
+    zeta1 = complex(-0.5, sqrt(T(3.0))*0.5)
+    zeta2 = conj(zeta1)
     return third*(s0 + s1 + s2), third*(s0 + s1*zeta2 + s2*zeta1), third*(s0 + s1*zeta1 + s2*zeta2)
 end
 
