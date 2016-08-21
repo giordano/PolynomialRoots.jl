@@ -147,7 +147,6 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
                                                         degree::Integer,
                                                         root::Complex{T},
                                                         epsilon::E)
-    root::Complex{T}
     iter = 0
     success = true
     good_to_go = false
@@ -225,7 +224,6 @@ end
 function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
                                                      degree::Integer,
                                                      root::Complex{T}, epsilon::E)
-    root::Complex{T}
     c_zero = zero(Complex{T})
     iter = 0
     success = true
