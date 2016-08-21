@@ -152,7 +152,6 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
     good_to_go = false
     stopping_crit2 = 0.0
     for i = 1:MAX_ITERS
-        faq = 1.0
         # Prepare stoping criterion.  Calculate value of polynomial and its
         # first two derivatives
         p  = poly[degree+1]
@@ -265,7 +264,6 @@ function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
         else
             good_to_go = false # reset if we are outside the zone of the root
         end
-        faq::Complex{T} = one(Complex{T})
         denom = c_zero
         if dp != 0
             invdp = inv(dp)
@@ -327,7 +325,6 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
             iteri = 0
             for i = 1:MAX_ITERS
                 iteri += 1
-                faq = 1.0
                 # prepare stoping criterion
                 ek = abs(poly[degree + 1])
                 absroot = abs(root)
@@ -416,7 +413,6 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
             iteri = 0
             for i = j:MAX_ITERS
                 iteri += 1
-                faq = 1.0
                 # calculate value of polynomial and its first two derivatives
                 p = poly[degree + 1]
                 dp = c_zero
@@ -501,7 +497,6 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
         end # if mode 1
         if mode == 0 # NEWTON'S METHOD
             for i = j:j+10 # do only 10 iterations the most, then go back to full Laguerre's
-                faq = 1.0
                 # calculate value of polynomial and its first two derivatives
                 p = poly[degree + 1]
                 dp = c_zero
