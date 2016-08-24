@@ -1,7 +1,7 @@
 History of PolynomialRoots.jl
 =============================
 
-v0.0.4 (2016-??-??)
+v0.0.4 (2016-08-24)
 -------------------
 
 * Fixed warnings in Julia 0.5.
