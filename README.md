@@ -196,10 +196,12 @@ If you are interested in double-precision accuracy, you can work around this
 problem by calculating the roots with higher precision and then transforming the
 result to double-precision.  Julia natively supports multiple precision
 calculations, so what you have to do is only to pass `BigFloat` numbers to
-`roots` function:
+`roots` function (**note**: in order to correctly initialize an arbitrary
+precision floating point constant it is better to use the `big` string literal,
+see http://docs.julialang.org/en/stable/stdlib/numbers/#Base.BigFloat):
 
 ``` julia
-julia> r = roots([BigFloat(94906268.375), BigFloat(-189812534), BigFloat(94906265.625)]);
+julia> r = roots([big"94906268.375", -189812534, big"94906265.625"]);
 
 julia> Float64(r[1])
 1.0000000289759583
