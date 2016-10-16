@@ -97,9 +97,7 @@ function divide_poly_1{T<:AbstractFloat}(p::Complex{T},
 end
 
 function solve_quadratic_eq{T<:AbstractFloat}(poly::Vector{Complex{T}})
-    a = poly[3]
-    b = poly[2]
-    c = poly[1]
+    c, b, a = poly
     Δ = sqrt(b*b - 4*a*c)
     if real(conj(b)*Δ) >= 0
         x0 = -0.5*(b + Δ)
@@ -658,7 +656,7 @@ function roots{N1<:Number,N2<:Number,E<:AbstractFloat}(poly::Vector{N1},
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
     roots!(promote(float(complex(roots)), float(complex(poly)))...,
-           float(epsilon), degree, polish)
+           epsilon, degree, polish)
 end
 
 function roots{N<:Number,E<:AbstractFloat}(poly::Vector{N};
@@ -783,7 +781,7 @@ end
 function roots5{N<:Number,E<:AbstractFloat}(poly::Vector{N}; epsilon::E=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     return roots5!(zeros(Complex{real(float(N))},  5), float(complex(poly)),
-                   float(epsilon), false)
+                   epsilon, false)
 end
 
 """
