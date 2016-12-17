@@ -87,7 +87,7 @@ function divide_poly_1{T<:AbstractFloat}(p::Complex{T},
                                          degree::Integer)
     coef = poly[degree+1]
     polyout = poly[1:degree]
-    for i = degree:-1:1
+    @inbounds for i = degree:-1:1
         prev = polyout[i]
         polyout[i] = coef
         coef = prev + p*coef
@@ -159,7 +159,7 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
             absroot = abs(root)
             # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
             # evaluate polynomials and derivatives
-            for k = degree:-1:1
+            @inbounds for k = degree:-1:1
                 dp = p + dp*root
                 p  = poly[k] + p*root # b_k
                 # Adams (1967), equation (8).
@@ -169,7 +169,7 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
         else # Calculate just the value and derivative
             # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
             # evaluate polynomials and derivatives
-            for k = degree:-1:1
+            @inbounds for k = degree:-1:1
                 dp = p + dp*root
                 p  = poly[k] + p*root # b_k
             end
@@ -237,9 +237,9 @@ function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
         p = poly[degree + 1]
         dp = c_zero
         d2p_half = c_zero
-        for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical Recipes
-                            # Sec. 5.3 how to evaluate polynomials and
-                            # derivatives
+        @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
+                                      # Recipes Sec. 5.3 how to evaluate
+                                      # polynomials and derivatives
             d2p_half = dp + d2p_half*root
             dp = p + dp*root
             p  = poly[k] + p*root # b_k
@@ -330,9 +330,10 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                 p = poly[degree + 1]
                 dp = c_zero
                 d2p_half = c_zero
-                for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                    # Recipes Sec. 5.3 how to evaluate
-                                    # polynomials and derivatives
+                @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
+                                              # Numerical Recipes Sec. 5.3 how
+                                              # to evaluate polynomials and
+                                              # derivatives
                     d2p_half = dp + d2p_half*root
                     dp = p + dp*root
                     p  = poly[k] + p*root # b_k
@@ -419,9 +420,10 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                     # prepare stoping criterion
                     ek = abs(poly[degree+1])
                     absroot = abs(root)
-                    for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                        # Recipes Sec. 5.3 how to evaluate
-                                        # polynomials and derivatives
+                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
+                                                  # Numerical Recipes Sec. 5.3
+                                                  # how to evaluate polynomials
+                                                  # and derivatives
                         d2p_half = dp + d2p_half*root
                         dp = p + dp*root
                         p  = poly[k] + p*root # b_k
@@ -430,9 +432,10 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                     end
                     stopping_crit2 = abs2(epsilon*ek)
                 else
-                    for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                        # Recipes Sec. 5.3 how to evaluate
-                                        # polynomials and derivatives
+                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
+                                                  # Numerical Recipes Sec. 5.3
+                                                  # how to evaluate polynomials
+                                                  # and derivatives
                         d2p_half = dp + d2p_half*root
                         dp = p + dp*root
                         p  = poly[k] + p*root # b_k
@@ -502,9 +505,10 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                     # prepare stoping criterion
                     ek = abs(poly[degree+1])
                     absroot = abs(root)
-                    for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                        # Recipes Sec. 5.3 how to evaluate
-                                        # polynomials and derivatives
+                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
+                                                  # Numerical Recipes Sec. 5.3
+                                                  # how to evaluate polynomials
+                                                  # and derivatives
                         dp = p + dp*root
                         p  = poly[k] + p*root # b_k
                         # Adams (1967), equation (8).
@@ -512,9 +516,10 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                     end
                     stopping_crit2 = abs2(epsilon*ek)
                 else #
-                    for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                        # Recipes Sec. 5.3 how to evaluate
-                                        # polynomials and derivatives
+                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
+                                                  # Numerical Recipes Sec. 5.3
+                                                  # how to evaluate polynomials
+                                                  # and derivatives
                         dp = p + dp*root
                         p = poly[k] + p*root # b_k
                     end
@@ -570,14 +575,12 @@ function find_2_closest_from_5{T<:AbstractFloat}(points::Vector{Complex{T}})
     d2min = Inf
     i1 = 0
     i2 = 0
-    for j = 1:n
-        for i = 1:j-1
-            d2 = abs2(points[i] - points[j])
-            if d2 <= d2min
-                i1 = i
-                i2 = j
-                d2min = d2
-            end
+    for j = 1:n, i = 1:j-1
+        d2 = abs2(points[i] - points[j])
+        if d2 <= d2min
+            i1 = i
+            i2 = j
+            d2min = d2
         end
     end
     return i1, i2, d2min
@@ -587,25 +590,17 @@ function sort_5_points_by_separation_i{T<:AbstractFloat}(points::Vector{Complex{
     n = 5
     distances2 = ones(T, n, n)*Inf
     dmin = Array(T, n)
-    for j = 1:n
-        for i = 1:j-1
-            distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
-        end
+    for j = 1:n, i = 1:j-1
+        distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end
-    for j = 1:n
+    @inbounds for j = 1:n
         dmin[j] = minimum(distances2[j,:])
     end
     return sort(collect(1:n), lt=(i,j) -> dmin[i]>dmin[j])
 end
 
 function sort_5_points_by_separation!{T<:AbstractFloat}(points::Vector{Complex{T}})
-    n = 5
-    sorted_points = sort_5_points_by_separation_i(points)
-    savepoints = copy(points)
-    for i = 1:n
-        points[i] = savepoints[sorted_points[i]]
-    end
-    return points
+    points = points[sort_5_points_by_separation_i(points)]
 end
 
 # Original function has a `use_roots_as_starting_points' argument.  We don't
@@ -624,7 +619,7 @@ function roots!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
         end
         return roots
     end
-    for n = degree:-1:3
+    @inbounds for n = degree:-1:3
         roots[n], iter, success = laguerre2newton(poly2, n, roots[n], 2, epsilon)
         if ! success
             roots[n], iter, success = laguerre(poly2, n,
@@ -632,7 +627,7 @@ function roots!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
         end
         # divide the polynomial by this root
         coef = poly2[n+1]
-        for i = n:-1:1
+        @inbounds for i = n:-1:1
             prev = poly2[i]
             poly2[i] = coef
             coef = prev + roots[n]*coef
@@ -642,7 +637,7 @@ function roots!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
     # `solve_quadratic_eq'.
     roots[1], roots[2] = solve_quadratic_eq(poly2)
     if polish
-        for n = 1:degree # polish roots one-by-one with a full polynomial
+        @inbounds for n = 1:degree # polish roots one-by-one with a full polynomial
             roots[n], iter, success = laguerre(poly, degree, roots[n], epsilon)
         end
     end
@@ -689,7 +684,7 @@ function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
                 return roots_robust # return not-polished roots, because polishing creates errors
             end
             poly2 = copy(poly) # copy coeffs
-            for m = degree:-1:4 # find the roots one-by-one (until 3 are left to be found)
+            @inbounds for m = degree:-1:4 # find the roots one-by-one (until 3 are left to be found)
                 roots[m], iter, succ = laguerre2newton(poly2, m, roots[m],
                                                        2, epsilon)
                 if ! succ
@@ -712,7 +707,7 @@ function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
         # (we know the roots approximately, and we guess that last two are closest)
         #---------------------
         poly2 = copy(poly) # copy coeffs
-        for m = 1:degree-2
+        @inbounds for m = 1:degree-2
             # polish roots with full polynomial
             roots[m], iter, succ = newton_spec(poly2, degree, roots[m], epsilon)
             if ! succ
@@ -724,7 +719,7 @@ function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
         end # m = 1:degree-2
         if succ
             # comment out division and quadratic if you (POWN) polish with Newton only
-            for m = 1:degree-2
+            @inbounds for m = 1:degree-2
                 poly2, remainder = divide_poly_1(roots[m], poly2, degree - m + 1)
             end
             # last two roots are found with quadratic equation solver
@@ -740,14 +735,14 @@ function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
                 if go_to_robust > 0
                     # if came from robust copy two most isolated roots as
                     # starting points for new robust
-                    for i = 1:degree-3
+                    @inbounds for i = 1:degree-3
                         roots[degree-i+1] = roots_robust[i]
                     end
                 else
                     # came from users initial guess copy some 2 roots (except
                     # the closest ones)
                     i2 = degree
-                    for i = 1:degree
+                    @inbounds for i = 1:degree
                         if (i != root4) && (i != root5)
                             roots[i2] = roots[i]
                             i2 -= 1
