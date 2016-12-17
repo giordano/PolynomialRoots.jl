@@ -655,7 +655,7 @@ function roots{N1<:Number,N2<:Number,E<:AbstractFloat}(poly::Vector{N1},
                                                        polish::Bool=false)
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
-    roots!(promote(float(complex(roots)), float(complex(poly)))...,
+    roots!(promote(float.(complex(roots)), float.(complex(poly)))...,
            epsilon, degree, polish)
 end
 
@@ -663,7 +663,7 @@ function roots{N<:Number,E<:AbstractFloat}(poly::Vector{N};
                                            epsilon::E=NaN,
                                            polish::Bool=false)
     degree = length(poly) - 1
-    roots!(zeros(Complex{real(float(N))}, degree), float(complex(poly)),
+    roots!(zeros(Complex{real(float(N))}, degree), float.(complex(poly)),
            epsilon, degree, polish)
 end
 
@@ -774,13 +774,13 @@ function roots5{N1<:Number,N2<:Number,E<:AbstractFloat}(poly::Vector{N1},
                                                         epsilon::E=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     @assert length(roots) == 5 "`roots' vector must have 5 elements"
-    return roots5!(promote(float(complex(roots)), float(complex(poly)))...,
+    return roots5!(promote(float.(complex(roots)), float.(complex(poly)))...,
                    epsilon, true)
 end
 
 function roots5{N<:Number,E<:AbstractFloat}(poly::Vector{N}; epsilon::E=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
-    return roots5!(zeros(Complex{real(float(N))},  5), float(complex(poly)),
+    return roots5!(zeros(Complex{real(float(N))},  5), float.(complex(poly)),
                    epsilon, false)
 end
 

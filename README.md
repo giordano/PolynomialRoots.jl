@@ -2,8 +2,8 @@
 
 | [**Package Evaluator**][pkgeval-link] | **Build Status**                          | **Code Coverage**               |
 |:-------------------------------------:|:-----------------------------------------:|:-------------------------------:|
-| [![][pkg-0.4-img]][pkg-0.4-url]       | [![Build Status][travis-img]][travis-url] | [![][coveral-img]][coveral-url] |
-| [![][pkg-0.5-img]][pkg-0.5-url]       | [![Build Status][appvey-img]][appvey-url] | [![][codecov-img]][codecov-url] |
+| [![][pkg-0.5-img]][pkg-0.5-url]       | [![Build Status][travis-img]][travis-url] | [![][coveral-img]][coveral-url] |
+| [![][pkg-0.6-img]][pkg-0.6-url]       | [![Build Status][appvey-img]][appvey-url] | [![][codecov-img]][codecov-url] |
 
 Introduction
 ------------
@@ -38,7 +38,7 @@ precision calculations (see example below).
 Installation
 ------------
 
-`PolynomialRoots.jl` is available for Julia 0.4 and later versions, and can be
+`PolynomialRoots.jl` is available for Julia 0.5 and later versions, and can be
 installed with
 [Julia built-in package manager](http://docs.julialang.org/en/stable/manual/packages/).
 In a Julia session run the command
@@ -264,10 +264,10 @@ The original author of `PolynomialRoots.jl` is Mosè Giordano.
 
 [pkgeval-link]: http://pkg.julialang.org/?pkg=PolynomialRoots
 
-[pkg-0.4-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.4.svg
-[pkg-0.4-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
 [pkg-0.5-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.5.svg
 [pkg-0.5-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
+[pkg-0.6-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.6.svg
+[pkg-0.6-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
 
 [travis-img]: https://travis-ci.org/giordano/PolynomialRoots.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/giordano/PolynomialRoots.jl
