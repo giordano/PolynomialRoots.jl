@@ -30,7 +30,7 @@ res  = roots(poly)
 # 1st-order polynomial
 poly = [im, 1]
 res  = roots(poly)
-@test_approx_eq zeros(length(res)) PolynomialRoots.evalpoly(res, poly)
+@test zeros(length(res)) ≈ PolynomialRoots.evalpoly(res, poly)
 
 # 2nd-order polynomials
 poly1 = [-15im, (5 - 3im), 1]
@@ -39,9 +39,9 @@ poly2 = [0, complex(5, -0.5), 1]
 res2  = roots(poly2)
 poly3 = [0, 0, 7]
 res3  = roots(poly3)
-@test_approx_eq zeros(length(res1)) PolynomialRoots.evalpoly(res1, poly1)
-@test_approx_eq zeros(length(res2)) PolynomialRoots.evalpoly(res2, poly2)
-@test_approx_eq zeros(length(res1)) PolynomialRoots.evalpoly(res3, poly3)
+@test zeros(length(res1)) ≈ PolynomialRoots.evalpoly(res1, poly1)
+@test zeros(length(res2)) ≈ PolynomialRoots.evalpoly(res2, poly2)
+@test zeros(length(res1)) ≈ PolynomialRoots.evalpoly(res3, poly3)
 
 # Test multiple precision.  See examples at page 5 of
 # http://www.cs.berkeley.edu/~wkahan/Qdrtcs.pdf
@@ -56,7 +56,7 @@ res2  = roots(poly2, epsilon=1e-70)
 # 3rd-order polynomial
 poly = [24, -(6 + 28im), (7im - 4), 1]
 res  = roots(poly)
-@test_approx_eq zeros(length(res)) PolynomialRoots.evalpoly(res, poly)
+@test zeros(length(res)) ≈ PolynomialRoots.evalpoly(res, poly)
 
 # 4th-order polynomial
 tol = 1e-13
@@ -71,8 +71,8 @@ res2  = roots(poly2, epsilon=1e-14)
 poly = [1, -5, 10, -10, 5, -1]
 res  = roots(poly,  ones(5))
 res5 = roots5(poly, ones(5))
-@test_approx_eq zeros(length(res))  PolynomialRoots.evalpoly(res,  poly)
-@test_approx_eq zeros(length(res5)) PolynomialRoots.evalpoly(res5, poly)
+@test zeros(length(res))  ≈ PolynomialRoots.evalpoly(res,  poly)
+@test zeros(length(res5)) ≈ PolynomialRoots.evalpoly(res5, poly)
 
 # Second 5th-order polynomial
 tol  = 2e-12
@@ -115,9 +115,9 @@ res52 = roots5(promote(poly2, zeros(Complex{BigFloat}, 5))...)
 @test PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0]) == (-5im, -3im)
 
 x1, x2, x3 = PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.])
-@test_approx_eq x1  3
-@test_approx_eq x2 -2im
-@test_approx_eq x3 -1
+@test x1 ≈  3
+@test x2 ≈ -2im
+@test x3 ≈ -1
 
 @test_approx_eq_eps PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] -im 1e-7
 @test PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0))[1] == 3
