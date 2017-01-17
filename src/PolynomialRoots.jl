@@ -589,7 +589,7 @@ end
 function sort_5_points_by_separation_i{T<:AbstractFloat}(points::Vector{Complex{T}})
     n = 5
     distances2 = ones(T, n, n)*Inf
-    dmin = Array(T, n)
+    dmin = Array{T}(n)
     for j = 1:n, i = 1:j-1
         distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end

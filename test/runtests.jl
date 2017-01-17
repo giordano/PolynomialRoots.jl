@@ -25,7 +25,7 @@ using Base.Test
 # 0th-order polynomial
 poly = [1]
 res  = roots(poly)
-@test Array(Complex128, 0) == res
+@test Array{Complex128}(0) == res
 
 # 1st-order polynomial
 poly = [im, 1]
@@ -50,8 +50,8 @@ poly1 = [big"94906268.375", big"-189812534", big"94906265.625"]
 res1  = roots(poly1, epsilon=1e-70)
 poly2 = [big"94906268.375", big"-189812534.75", big"94906266.375"]
 res2  = roots(poly2, epsilon=1e-70)
-@test_approx_eq_eps zeros(length(res1)) PolynomialRoots.evalpoly(res1, poly1) tol
-@test_approx_eq_eps zeros(length(res2)) PolynomialRoots.evalpoly(res2, poly2) tol
+@test zeros(length(res1)) ≈ PolynomialRoots.evalpoly(res1, poly1) atol = tol
+@test zeros(length(res2)) ≈ PolynomialRoots.evalpoly(res2, poly2) atol = tol
 
 # 3rd-order polynomial
 poly = [24, -(6 + 28im), (7im - 4), 1]
@@ -64,8 +64,8 @@ poly1 = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
 res1  = roots(poly1)
 poly2 = [BigInt(6), -28, 496im, 8128, -33550336im]
 res2  = roots(poly2, epsilon=1e-14)
-@test_approx_eq_eps zeros(length(res1)) PolynomialRoots.evalpoly(res1, poly1) tol
-@test_approx_eq_eps zeros(length(res2)) PolynomialRoots.evalpoly(res2, poly2) tol
+@test zeros(length(res1)) ≈ PolynomialRoots.evalpoly(res1, poly1) atol = tol
+@test zeros(length(res2)) ≈ PolynomialRoots.evalpoly(res2, poly2) atol = tol
 
 # First 5th-order polynomial
 poly = [1, -5, 10, -10, 5, -1]
@@ -79,8 +79,8 @@ tol  = 2e-12
 poly = [120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1]
 res  = roots(poly,  [im, 2, 3im, 4, 5im])
 res5 = roots5(poly, [im, 2, 3im, 4, 5im])
-@test_approx_eq_eps zeros(length(res))  PolynomialRoots.evalpoly(res,  poly) tol
-@test_approx_eq_eps zeros(length(res5)) PolynomialRoots.evalpoly(res5, poly) tol
+@test zeros(length(res))  ≈ PolynomialRoots.evalpoly(res,  poly) atol = tol
+@test zeros(length(res5)) ≈ PolynomialRoots.evalpoly(res5, poly) atol = tol
 
 # Random 5th-order polynomials
 info("Testing random polynomials...")
@@ -93,10 +93,10 @@ poly2 = rand(Complex128, 6)*20 - complex(10, 10)
 for i = 1:length(poly2); println(" poly2[$i] = ", poly2[i]); end
 res2  = roots(promote(poly2, zeros(Complex{BigFloat}, 5))..., polish=true)
 res52 = roots5(promote(poly2, zeros(Complex{BigFloat}, 5))...)
-@test_approx_eq_eps zeros(length(res1))  PolynomialRoots.evalpoly(res1,  poly1) tol
-@test_approx_eq_eps zeros(length(res51)) PolynomialRoots.evalpoly(res51, poly1) tol
-@test_approx_eq_eps zeros(length(res2))  PolynomialRoots.evalpoly(res2,  poly2) tol
-@test_approx_eq_eps zeros(length(res52)) PolynomialRoots.evalpoly(res52, poly2) tol
+@test zeros(length(res1))  ≈ PolynomialRoots.evalpoly(res1,  poly1) atol = tol
+@test zeros(length(res51)) ≈ PolynomialRoots.evalpoly(res51, poly1) atol = tol
+@test zeros(length(res2))  ≈ PolynomialRoots.evalpoly(res2,  poly2) atol = tol
+@test zeros(length(res52)) ≈ PolynomialRoots.evalpoly(res52, poly2) atol = tol
 
 # Throw errors
 @test_throws AssertionError roots([1,2,3],[1])
@@ -119,7 +119,7 @@ x1, x2, x3 = PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.])
 @test x2 ≈ -2im
 @test x3 ≈ -1
 
-@test_approx_eq_eps PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] -im 1e-7
+@test PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] ≈ -im atol = 1e-7
 @test PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0))[1] == 3
 
 @test PolynomialRoots.laguerre([-1., 2im, 1.], 2, complex(1.), eps(1.0))[1] == -im
