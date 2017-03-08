@@ -148,7 +148,7 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
     iter = 0
     success = true
     good_to_go = false
-    stopping_crit2 = 0.0
+    stopping_crit2 = zero(promote_type(T,E))
     for i = 1:MAX_ITERS
         # Prepare stoping criterion.  Calculate value of polynomial and its
         # first two derivatives
@@ -307,7 +307,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
     c_one = one(Complex{T})
     iter=0
     success = true
-    stopping_crit2 = 0.0
+    stopping_crit2 = zero(promote_type(T, E))
     j = 1
     good_to_go = false
     mode = starting_mode  # mode=2 full laguerre, mode=1 SG, mode=0 newton
@@ -610,7 +610,7 @@ function roots!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
                                                    poly::Vector{Complex{T}},
                                                    epsilon::E, degree::Integer,
                                                    polish::Bool)
-    isnan(epsilon) && (epsilon = eps(one(T)))
+    isnan(epsilon) && (epsilon = eps(T))
     poly2 = copy(poly)
     # skip small degree polynomials from doing Laguerre's method
     if degree <= 1
@@ -665,7 +665,7 @@ end
 function roots5!{T<:AbstractFloat,E<:AbstractFloat}(roots::Vector{Complex{T}},
                                                     poly::Vector{Complex{T}},
                                                     epsilon::E, polish::Bool)
-    isnan(epsilon) && (epsilon = eps(one(T)))
+    isnan(epsilon) && (epsilon = eps(T))
     c_zero = zero(Complex{T})
     degree = 5
     roots_robust = copy(roots)
