@@ -103,15 +103,15 @@ end
 end
 
 @testset "Random polynomials" begin
-    tol  = 2e-12
-    poly1 = rand(Complex128, 6)*20 - complex(10, 10)
-    for i = 1:length(poly1); println(" poly1[$i] = ", poly1[i]); end
+    tol  = 5e-12
+    poly1 = 10 .* complex.(randn(6), randn(6))
+    for i in eachindex(poly1); println(" poly1[$i] = ", poly1[i]); end
     res1  = @inferred(roots(poly1, polish=true))
     res51 = roots5(poly1)
-    poly2 = rand(Complex128, 6)*20 - complex(10, 10)
-    for i = 1:length(poly2); println(" poly2[$i] = ", poly2[i]); end
-    res2  = @inferred(roots(promote(poly2, zeros(Complex{BigFloat}, 5))..., polish=true))
-    res52 = @inferred(roots5(promote(poly2, zeros(Complex{BigFloat}, 5))...))
+    poly2 = 10 .* complex.(randn(6), randn(6))
+    for i in eachindex(poly2); println(" poly2[$i] = ", poly2[i]); end
+    res2  = @inferred(roots(big.(poly2), zeros(Complex{BigFloat}, 5), polish=true))
+    res52 = @inferred(roots5(big.(poly2), zeros(Complex{BigFloat}, 5)))
     @test zeros(length(res1))  ≈ PolynomialRoots.evalpoly(res1,  poly1) atol = tol
     @test zeros(length(res51)) ≈ PolynomialRoots.evalpoly(res51, poly1) atol = tol
     @test zeros(length(res2))  ≈ PolynomialRoots.evalpoly(res2,  poly2) atol = tol
