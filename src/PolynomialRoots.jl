@@ -307,6 +307,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
     iter=0
     success = true
     stopping_crit2 = zero(promote_type(T, E))
+    i = 0
     j = 1
     good_to_go = false
     mode = starting_mode  # mode=2 full laguerre, mode=1 SG, mode=0 newton
@@ -319,9 +320,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
             n_1_nth = (degree - 1)*one_nth
             two_n_div_n_1 = 2 / n_1_nth
             c_one_nth = complex(one_nth)
-            iteri = 0
             for i = 1:MAX_ITERS
-                iteri += 1
                 # prepare stoping criterion
                 ek = abs(poly[degree + 1])
                 absroot = abs(root)
@@ -400,16 +399,14 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                 end
                 root = newroot
             end # do mode 2
-            if iteri >= MAX_ITERS
+            if i >= MAX_ITERS
                 success = false
                 return root, iter, success
             end
         end # if mode 2
         #------------------------------------------------------------- mode 1
         if mode == 1 # SECOND-ORDER GENERAL METHOD (SG)
-            iteri = 0
             for i = j:MAX_ITERS
-                iteri += 1
                 # calculate value of polynomial and its first two derivatives
                 p = poly[degree + 1]
                 dp = c_zero
@@ -488,7 +485,7 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
                 end
                 root = newroot
             end # do mode 1
-            if iteri >= MAX_ITERS
+            if i >= MAX_ITERS
                 success = false
                 return root, iter, success
             end

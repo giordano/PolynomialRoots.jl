@@ -92,6 +92,16 @@ end
     @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 1e-49
 end
 
+@testset "Bug fixes" begin
+    # Polynomial reported in https://github.com/giordano/PolynomialRoots.jl/issues/2
+    poly = [63.22256105356723, 271.8182248226112, 144.3588342039991, -25.60790629850817,
+            952.6388846106129, -32.65159275777219, 62.19331611327388, 44.70637211946786,
+            -28.265078307398895, -37.63653902029289, -72.26102355751738, -25.501990478720046,
+            -47.40236121905153, -71.92379520244637, -57.977452001749555]
+    @test zeros(length(poly)-1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 2e-11
+end
+
 @testset "Random polynomials" begin
     tol  = 2e-12
     poly1 = rand(Complex128, 6)*20 - complex(10, 10)
