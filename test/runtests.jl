@@ -194,12 +194,10 @@ end
                                                 complex(3, 4)],
                                                complex(7, 8))
 
-    @test @inferred(PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0])) == (-5im, -3im)
+    @test [@inferred(PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0]))...] ≈ [-5im, -3im]
 
-    x1, x2, x3 = @inferred(PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.]))
-    @test x1 ≈  3
-    @test x2 ≈ -2im
-    @test x3 ≈ -1
+    @test [@inferred(PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.0]))...] ≈ [3, -2im, -1]
+    @test [@inferred(PolynomialRoots.solve_cubic_eq(complex.([1.0, -3.0, 3.0, -1.0])))...] ≈ [1, 1, 1]
 
     @test @inferred(PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0)))[1] ≈ -im atol = 1e-7
     @test @inferred(PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0)))[1] == 3
