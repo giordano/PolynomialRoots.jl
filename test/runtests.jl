@@ -58,26 +58,61 @@ end
 
 @testset "3rd-order polynomials" begin
     poly = [24, -(6 + 28im), (7im - 4), 1]
-    res  = @inferred(roots(poly))
-    @test zeros(length(res)) ≈ PolynomialRoots.evalpoly(res, poly)
+    @test zeros(length(poly) - 1) ≈ PolynomialRoots.evalpoly(@inferred(roots(poly)), poly)
+    poly = [(0.69 + 4.19im), (0.88 + 9.31im), (6.33 - 3.41im), -(9.51 - 9.91im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 3e-15
+    poly = [-(6.68 + 10.0im), (8.14 - 4.79im), -(4.51 + 0.17im), -(1.52 + 3.56im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 5e-15
+    poly = [(3.34 + 0.01im), (7.33 + 2.1im), -(2.56 + 1.09im), (6.96 + 6.18im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 6e-15
+    poly = [-(0.37 - 4.7im), -(1.77 - 5.43im), (0.94 - 6.66im), -(8.8 - 6.21im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 6e-15
 end
 
 @testset "4th-order polynomials" begin
-    tol = 1e-13
-    poly1 = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
-    res1  = @inferred(roots(poly1))
-    poly2 = [BigInt(6), -28, 496im, 8128, -33550336im]
-    res2  = @inferred(roots(poly2, epsilon=1e-14))
-    @test zeros(length(res1)) ≈ PolynomialRoots.evalpoly(res1, poly1) atol = tol
-    @test zeros(length(res2)) ≈ PolynomialRoots.evalpoly(res2, poly2) atol = tol
+    tol = 2e-14
+    poly = [294, -(84 + 49im), (55 + 14im), -(14 + im), 1]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = tol
+    poly = [BigInt(6), -28, 496im, 8128, -33550336im]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = tol
+    poly = [-(0.82 + 3.77im), -(0.4 - 2.11im), -(2.75 + 0.7im), (0.11 - 6.02im), (4.99 + 2.91im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = tol
+    poly = [(7.72 - 8.44im), (0.76 + 0.94im), (0.1 - 1.15im), (6.79 - 0.61im), (3.02 + 5.22im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = tol
+    poly = [(3.16 - 7.9im), (5.18 + 5.38im), (2.44 - 4.25im), (4.48 + 6.45im), -(6.27 - 3.22im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = tol
 end
 
 @testset "5th-order polynomials" begin
     poly = [1, -5, 10, -10, 5, -1]
-    res  = @inferred(roots(poly,  ones(5)))
-    res5 = @inferred(roots5(poly, ones(5)))
-    @test zeros(length(res))  ≈ PolynomialRoots.evalpoly(res,  poly)
-    @test zeros(length(res5)) ≈ PolynomialRoots.evalpoly(res5, poly)
+    @test zeros(length(poly) - 1)  ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly,  ones(5))),  poly)
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots5(poly, ones(5))), poly)
+    poly = [-(0.76 + 0.9im), (4.96 + 0.75im), (2.45 + 0.54im), (7.35 - 2.55im), (9.18 + 3.68im), (9.17 + 8.68im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 2e-14
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots5(poly, ones(5))), poly) atol = 2e-14
+    poly = [(2.16 - 8.7im), -(0.76 - 6.27im), (5.25 + 3.87im), (8.95 - 0.94im), (2.33 + 6.43im), (2.98 + 4.26im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 3e-14
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots5(poly, ones(5))), poly) atol = 3e-14
+    poly = [(8.2 + 1.79im), -(8.38 + 1.57im), -(7.33 - 3.94im), (4.91 - 4.37im), (5.52 + 5.68im), -(3.9 - 7.12im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 3e-14
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots5(poly, ones(5))), poly) atol = 5e-14
 
     tol  = 2e-12
     poly = [120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1]
@@ -87,9 +122,35 @@ end
     @test zeros(length(res5)) ≈ PolynomialRoots.evalpoly(res5, poly) atol = tol
 end
 
+@testset "6th-order polynomials" begin
+    poly = [(2.8 + 3.8im), -(2.0 - 0.5im), -(0.8 - 4.7im), -(8.3 - 4.5im), -(5.7 - 8.9im), -(9.1 + 2.1im), -(8.2 - 8.9im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 2e-14
+    poly = [-(1.2 - 3.5im), (2.3 + 0.3im), (5.5 - 3.9im), (0.4 + 0.3im), (6.4 - 8.9im), -(0.4 - 8.4im), (7.8 - 0.2im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 4e-14
+    poly = [-(7.1 - 6.0im), (9.2 - 0.7im), -(3.3 - 7.9im), (0.3 - 0.9im), (3.3 - 2.1im), (5.0 + 3.7im), -(3.5 + 6.7im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 4e-14
+    poly = [-(6.3 + 2.6im), -(0.3 + 7.7im), -(4.9 + 5.2im), (3.0 - 4.5im), (2.5 + 2.2im), -(2.9 - 2.1im), -(3.7 - 0.7im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 4e-14
+    poly = [-(8.4 + 2.0im), (7.0 - 2.5im), (9.9 + 5.0im), -(4.1 - 9.5im), 6.0im, -(4.9 - 6.9im), (9.4 + 4.9im)]
+    @test zeros(length(poly) - 1) ≈
+        PolynomialRoots.evalpoly(@inferred(roots(poly)), poly) atol = 4e-14
+end
+
 @testset "9th-order polynomials" begin
     poly = big.([-648, 3132, -6534, 7737, -5744, 2779, -878, 175, -20, 1])
     @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 1e-49
+    poly = [-1, -(9 + 6im), (7 + 3im), -(7 + 5im), -(8 - 10im), (1 - 5im), -(2 - 5im), -(7 - 7im), +(7 + 6im), (7 - 10im)]
+    @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 2e-13
+    poly = [-(3 - 2im), (4 + 4im), (4 + 5im), (6 + 10im), (3 + 4im), -(5 + 9im), -(10 - 3im), -(3 - 8im), (6 + 3im), (6 - 2im)]
+    @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 2e-13
+    poly = [(2 - 10im), (8 - 1im), (3 + 8im), -(10 + 9im), (5 + 5im), (9 + 4im), (9 - 10im), (4 + 4im), 8, (10 + 9im)]
+    @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 2e-13
+    poly = [(4 - 5im), -(7 + 6im), -(4 - 8im), -(3 - 5im), (9 - 2im), (9 - 6im), (6 - 4im), -(8 - 6im), -(3 - 6im), (1 - 10im)]
+    @test zeros(length(poly)-1) ≈ PolynomialRoots.evalpoly(roots(poly), poly) atol = 2e-13
 end
 
 @testset "Bug fixes" begin
