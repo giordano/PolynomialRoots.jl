@@ -1,7 +1,7 @@
 History of PolynomialRoots.jl
 =============================
 
-v0.1.0 (201?-??-??)
+v0.1.0 (2017-05-07)
 -------------------
 
 ### Breaking Changes
@@ -21,14 +21,14 @@ v0.0.4 (2016-08-24)
 v0.0.3 (2016-05-29)
 -------------------
 
-### New Features ###
+### New Features
 
 * Precompilation enabled
 
 v0.0.2 (2016-04-04)
 -------------------
 
-### New Features ###
+### New Features
 
 * Support for arbitrary precision calculations
 
