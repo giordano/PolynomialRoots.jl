@@ -6,7 +6,12 @@ v0.1.0 (201?-??-??)
 
 ### Breaking Changes
 
-* Support for Julia 0.4 and 0.5 was dropped.
+* Support for Julia 0.4 was dropped.
+
+### Bug Fixes
+
+* Fixed bug causing infinite loop
+  ([#2](https://github.com/giordano/PolynomialRoots.jl/issues/2)).
 
 v0.0.4 (2016-08-24)
 -------------------
