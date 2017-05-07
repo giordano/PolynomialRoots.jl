@@ -1,6 +1,6 @@
 ### runtests.jl --- Test suite for PolynomialRoots.jl
 
-# Copyright (C) 2016  Mosè Giordano
+# Copyright (C) 2016, 2017  Mosè Giordano
 
 # Maintainer: Mosè Giordano <mose AT gnu DOT org>
 
@@ -23,6 +23,56 @@ using PolynomialRoots
 using Base.Test
 
 import PolynomialRoots: evalpoly
+
+@testset "Helper functions" begin
+    p, dp = @inferred(PolynomialRoots.eval_poly_der(complex(1, 2), [im, 2, 3im, 4], 3, complex(0)))
+    @test p == -54 - 12im
+    @test dp == -46 + 54im
+    p, dp, dp2 = @inferred(PolynomialRoots.eval_poly_der2(complex(1, 2), [im, 2, 3im, 4], 3, complex(0)))
+    @test p == -54 - 12im
+    @test dp == -46 + 54im
+    @test dp2 == 12 + 27im
+    p, dp, ek = @inferred(PolynomialRoots.eval_poly_der_ek(complex(1, 2), [im, 2, 3im, 4], 3, complex(0)))
+    @test p == -54 - 12im
+    @test dp == -46 + 54im
+    @test ek ≈ 214.10490215534654
+    p, dp, dp2, ek = @inferred(PolynomialRoots.eval_poly_der2_ek(complex(1, 2), [im, 2, 3im, 4], 3, complex(0)))
+    @test p == -54 - 12im
+    @test dp == -46 + 54im
+    @test dp2 == 12 + 27im
+    @test ek ≈ 214.10490215534654
+
+    @test PolynomialRoots.divide_poly_1(complex(5.,6.),
+                                        [complex(14., -8.),
+                                         complex(10., -36),
+                                         complex(3., 4.)],
+                                        2) == ([complex(1, 2),
+                                                complex(3, 4)],
+                                               complex(7, 8))
+
+    @test [@inferred(PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0]))...] ≈ [-5im, -3im]
+
+    @test [@inferred(PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.0]))...] ≈ [3, -2im, -1]
+    @test [@inferred(PolynomialRoots.solve_cubic_eq(complex.([1.0, -3.0, 3.0, -1.0])))...] ≈ [1, 1, 1]
+
+    @test isapprox(@inferred(PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0)))[1], -im, atol = 1e-7)
+    @test @inferred(PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0)))[1] == 3
+
+    @test @inferred(PolynomialRoots.laguerre([-1., 2im, 1.], 2, complex(1.), eps(1.0)))[1] == -im
+    @test @inferred(PolynomialRoots.laguerre(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0)))[1] == 3
+
+    @test @inferred(PolynomialRoots.find_2_closest_from_5(complex([1.,3,6,10,15]))) == (1,2,4.0)
+    @test @inferred(PolynomialRoots.find_2_closest_from_5(complex([1.,3,5,7,9])))   == (4,5,4.0)
+
+    a = complex([18., 5., 7., 10., 1.])
+    @test @inferred(PolynomialRoots.sort_5_points_by_separation_i(a)) == [1, 5, 4, 2, 3]
+
+    @test @inferred(PolynomialRoots.sort_5_points_by_separation!(a)) ==
+        complex([18., 1., 10., 5., 7.])
+
+    @test @inferred(PolynomialRoots.laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2, eps(1.0)))[1] == -im
+    @test @inferred(PolynomialRoots.laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2, eps(1.0)))[1] == 3
+end
 
 @testset "0th-order polynomials" begin
     poly = [1]
@@ -182,37 +232,4 @@ end
     @test_throws AssertionError @inferred(roots([1,2,3],[1]))
     @test_throws AssertionError @inferred(roots5([1,2,3]))
     @test_throws AssertionError @inferred(roots5([1,2,3,4,5,6], [1]))
-end
-
-@testset "Helper functions" begin
-    @test PolynomialRoots.divide_poly_1(complex(5.,6.),
-                                        [complex(14., -8.),
-                                         complex(10., -36),
-                                         complex(3., 4.)],
-                                        2) == ([complex(1, 2),
-                                                complex(3, 4)],
-                                               complex(7, 8))
-
-    @test [@inferred(PolynomialRoots.solve_quadratic_eq([-15.0, 8.0im, 1.0]))...] ≈ [-5im, -3im]
-
-    @test [@inferred(PolynomialRoots.solve_cubic_eq([-6im, -(3 + 4im), 2im-2, 1.0]))...] ≈ [3, -2im, -1]
-    @test [@inferred(PolynomialRoots.solve_cubic_eq(complex.([1.0, -3.0, 3.0, -1.0])))...] ≈ [1, 1, 1]
-
-    @test isapprox(@inferred(PolynomialRoots.newton_spec([-1., 2im, 1.], 2, complex(1.), eps(1.0)))[1], -im, atol = 1e-7)
-    @test @inferred(PolynomialRoots.newton_spec(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0)))[1] == 3
-
-    @test @inferred(PolynomialRoots.laguerre([-1., 2im, 1.], 2, complex(1.), eps(1.0)))[1] == -im
-    @test @inferred(PolynomialRoots.laguerre(complex([6., -5., 1.]), 2, complex(2.8), eps(1.0)))[1] == 3
-
-    @test @inferred(PolynomialRoots.find_2_closest_from_5(complex([1.,3,6,10,15]))) == (1,2,4.0)
-    @test @inferred(PolynomialRoots.find_2_closest_from_5(complex([1.,3,5,7,9])))   == (4,5,4.0)
-
-    a = complex([18., 5., 7., 10., 1.])
-    @test @inferred(PolynomialRoots.sort_5_points_by_separation_i(a)) == [1, 5, 4, 2, 3]
-
-    @test @inferred(PolynomialRoots.sort_5_points_by_separation!(a)) ==
-        complex([18., 1., 10., 5., 7.])
-
-    @test @inferred(PolynomialRoots.laguerre2newton([-1., 2im, 1.], 2, complex(1.), 2, eps(1.0)))[1] == -im
-    @test @inferred(PolynomialRoots.laguerre2newton(complex([6., -5., 1.]), 2, complex(2.8), 2, eps(1.0)))[1] == 3
 end

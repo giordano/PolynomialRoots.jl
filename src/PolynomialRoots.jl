@@ -1,7 +1,7 @@
 ### PolynomialRoots.jl --- Fast Complex Polynomial Root Finder
 #
 # Copyright (C) 2012: Jan Skowron & Andrew Gould
-# Copyright (C) 2016: Mosè Giordano
+# Copyright (C) 2016, 2017: Mosè Giordano
 #
 # Author: Mosè Giordano <mose AT gnu DOT org>
 # Keywords: polynomials, root finding, multiple precision
@@ -82,6 +82,58 @@ const FRAC_JUMPS = [0.64109297, # some random numbers
                     0.37794326, 0.04618805,  0.75132137]
 const FRAC_JUMP_LEN = length(FRAC_JUMPS)
 
+@inline function eval_poly_der{T<:Complex}(x::T, poly::Vector{T}, degree, c_zero)
+    p = poly[end]
+    dp = c_zero
+    @inbounds for k in degree:-1:1
+        dp = x * dp + p
+        p  = x * p + poly[k]
+    end
+    return p, dp
+end
+
+@inline function eval_poly_der2{T<:Complex}(x::T, poly::Vector{T}, degree, c_zero)
+    p = poly[end]
+    dp = c_zero
+    d2p_half = c_zero
+    @inbounds for k in degree:-1:1
+        d2p_half = x * d2p_half + dp
+        dp = x * dp + p
+        p  = x * p + poly[k]
+    end
+    return p, dp, d2p_half
+end
+
+@inline function eval_poly_der_ek{T<:Complex}(x::T, poly::Vector{T}, degree, c_zero)
+    p = poly[end]
+    dp = c_zero
+    ek = abs(p)
+    absx = abs(x)
+    @inbounds for k in degree:-1:1
+        dp = x * dp + p
+        p  = x * p + poly[k]
+        # Adams (1967) equation (8).
+        ek = absx * ek + abs(p)
+    end
+    return p, dp, ek
+end
+
+@inline function eval_poly_der2_ek{T<:Complex}(x::T, poly::Vector{T}, degree, c_zero)
+    p = poly[end]
+    dp = c_zero
+    d2p_half = c_zero
+    ek = abs(p)
+    absx = abs(x)
+    @inbounds for k in degree:-1:1
+        d2p_half = x * d2p_half + dp
+        dp = x * dp + p
+        p  = x * p + poly[k]
+        # Adams (1967) equation (8).
+        ek = absx * ek + abs(p)
+    end
+    return p, dp, d2p_half, ek
+end
+
 function divide_poly_1{T<:AbstractFloat}(p::Complex{T},
                                          poly::Vector{Complex{T}},
                                          degree::Integer)
@@ -148,31 +200,16 @@ function newton_spec{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}}
     iter = 0
     success = true
     good_to_go = false
+    c_zero = zero(Complex{T})
     stopping_crit2 = zero(promote_type(T,E))
     for i = 1:MAX_ITERS
         # Prepare stoping criterion.  Calculate value of polynomial and its
         # first two derivatives
-        p  = poly[degree+1]
-        dp = zero(Complex{T})
         if mod(i, 10) == 1 # Calculate stopping criterion every ten iterations
-            ek = abs(poly[degree + 1])
-            absroot = abs(root)
-            # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
-            # evaluate polynomials and derivatives
-            @inbounds for k = degree:-1:1
-                dp = p + dp*root
-                p  = poly[k] + p*root # b_k
-                # Adams (1967), equation (8).
-                ek = absroot*ek + abs(p)
-            end
+            p, dp, ek = eval_poly_der_ek(root, poly, degree, c_zero)
             stopping_crit2 = abs2(epsilon*ek)
         else # Calculate just the value and derivative
-            # Horner Scheme, see for eg.  Numerical Recipes Sec. 5.3 how to
-            # evaluate polynomials and derivatives
-            @inbounds for k = degree:-1:1
-                dp = p + dp*root
-                p  = poly[k] + p*root # b_k
-            end
+            p, dp = eval_poly_der(root, poly, degree, c_zero)
         end
         iter += 1
         abs2p = abs2(p)
@@ -230,22 +267,9 @@ function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
     two_n_div_n_1 = 2 / n_1_nth
     c_one_nth = complex(one_nth)
     for i = 1:MAX_ITERS
-        # prepare stoping criterion
-        ek = abs(poly[degree + 1])
-        absroot = abs(root)
-        # calculate value of polynomial and its first two derivatives
-        p = poly[degree + 1]
-        dp = c_zero
-        d2p_half = c_zero
-        @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.  Numerical
-                                      # Recipes Sec. 5.3 how to evaluate
-                                      # polynomials and derivatives
-            d2p_half = dp + d2p_half*root
-            dp = p + dp*root
-            p  = poly[k] + p*root # b_k
-            # Adams (1967), equation (8).
-            ek = absroot*ek + abs(p)
-        end
+        # calculate value of polynomial and its first two derivatives and prepare stoping
+        # criterion
+        p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
         iter=iter+1
         abs2p = abs2(p)
         if abs2p == 0
@@ -321,23 +345,9 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
             two_n_div_n_1 = 2 / n_1_nth
             c_one_nth = complex(one_nth)
             for i = 1:MAX_ITERS
-                # prepare stoping criterion
-                ek = abs(poly[degree + 1])
-                absroot = abs(root)
-                # calculate value of polynomial and its first two derivatives
-                p = poly[degree + 1]
-                dp = c_zero
-                d2p_half = c_zero
-                @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
-                                              # Numerical Recipes Sec. 5.3 how
-                                              # to evaluate polynomials and
-                                              # derivatives
-                    d2p_half = dp + d2p_half*root
-                    dp = p + dp*root
-                    p  = poly[k] + p*root # b_k
-                    # Adams (1967), equation (8).
-                    ek = absroot*ek + abs(p)
-                end
+                # calculate value of polynomial and its first two derivatives and prepare
+                # stoping criterion
+                p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
                 abs2p = abs2(p)
                 iter = iter + 1
                 if abs2p == 0
@@ -408,33 +418,12 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
         if mode == 1 # SECOND-ORDER GENERAL METHOD (SG)
             for i = j:MAX_ITERS
                 # calculate value of polynomial and its first two derivatives
-                p = poly[degree + 1]
-                dp = c_zero
-                d2p_half = c_zero
                 if mod(i - j, 10) == 0
                     # prepare stoping criterion
-                    ek = abs(poly[degree+1])
-                    absroot = abs(root)
-                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
-                                                  # Numerical Recipes Sec. 5.3
-                                                  # how to evaluate polynomials
-                                                  # and derivatives
-                        d2p_half = dp + d2p_half*root
-                        dp = p + dp*root
-                        p  = poly[k] + p*root # b_k
-                        # Adams (1967) equation (8).
-                        ek = absroot*ek + abs(p)
-                    end
+                    p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
                     stopping_crit2 = abs2(epsilon*ek)
                 else
-                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
-                                                  # Numerical Recipes Sec. 5.3
-                                                  # how to evaluate polynomials
-                                                  # and derivatives
-                        d2p_half = dp + d2p_half*root
-                        dp = p + dp*root
-                        p  = poly[k] + p*root # b_k
-                    end
+                    p, dp, d2p_half = eval_poly_der2(root, poly, degree, c_zero)
                 end
                 abs2p = abs2(p) #abs(p)**2
                 iter = iter + 1
@@ -493,30 +482,11 @@ function laguerre2newton{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex
         if mode == 0 # NEWTON'S METHOD
             for i = j:j+10 # do only 10 iterations the most, then go back to full Laguerre's
                 # calculate value of polynomial and its first two derivatives
-                p = poly[degree + 1]
-                dp = c_zero
                 if i == j # calculate stopping crit only once at the begining
-                    # prepare stoping criterion
-                    ek = abs(poly[degree+1])
-                    absroot = abs(root)
-                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
-                                                  # Numerical Recipes Sec. 5.3
-                                                  # how to evaluate polynomials
-                                                  # and derivatives
-                        dp = p + dp*root
-                        p  = poly[k] + p*root # b_k
-                        # Adams (1967), equation (8).
-                        ek = absroot*ek + abs(p)
-                    end
+                    p, dp, ek = eval_poly_der_ek(root, poly, degree, c_zero)
                     stopping_crit2 = abs2(epsilon*ek)
                 else #
-                    @inbounds for k = degree:-1:1 # Horner Scheme, see for eg.
-                                                  # Numerical Recipes Sec. 5.3
-                                                  # how to evaluate polynomials
-                                                  # and derivatives
-                        dp = p + dp*root
-                        p = poly[k] + p*root # b_k
-                    end
+                    p, dp = eval_poly_der(root, poly, degree, c_zero)
                 end
                 abs2p = abs2(p) #abs(p)**2
                 iter = iter + 1

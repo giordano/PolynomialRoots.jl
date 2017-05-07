@@ -10,7 +10,7 @@ library (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
 The original author of `PolynomialRoots.jl` is Mosè Giordano.
 
 > Copyright (C) 2012: Jan Skowron & Andrew Gould
-> Copyright (C) 2016: Mosè Giordano
+> Copyright (C) 2016, 2017: Mosè Giordano
 >
 >                                 Apache License
 >                           Version 2.0, January 2004
