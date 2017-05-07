@@ -299,7 +299,7 @@ function laguerre{T<:AbstractFloat,E<:AbstractFloat}(poly::Vector{Complex{T}},
             end
         end
         if denom == 0  # test if demoninators are > 0.0 not to divide by zero
-            dx::Complex{T} = (absroot + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1] * 2 * pi) # make some random jump
+            dx::Complex{T} = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1] * 2 * pi) # make some random jump
         else
             dx = fac_netwon / denom
         end
@@ -539,7 +539,7 @@ function find_2_closest_from_5{T<:AbstractFloat}(points::Vector{Complex{T}})
     d2min = Inf
     i1 = 0
     i2 = 0
-    for j = 1:n, i = 1:j-1
+    @inbounds for j = 1:n, i = 1:j-1
         d2 = abs2(points[i] - points[j])
         if d2 <= d2min
             i1 = i
@@ -554,13 +554,13 @@ function sort_5_points_by_separation_i{T<:AbstractFloat}(points::Vector{Complex{
     n = 5
     distances2 = ones(T, n, n)*Inf
     dmin = Array{T}(n)
-    for j = 1:n, i = 1:j-1
+    @inbounds for j = 1:n, i = 1:j-1
         distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end
     @inbounds for j = 1:n
         dmin[j] = minimum(distances2[j,:])
     end
-    return sort(collect(1:n), lt=(i,j) -> dmin[i]>dmin[j])
+    return sort!(collect(1:n), lt=(i,j) -> dmin[i]>dmin[j])
 end
 
 function sort_5_points_by_separation!{T<:AbstractFloat}(points::Vector{Complex{T}})
