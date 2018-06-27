@@ -8,8 +8,8 @@
 Introduction
 ------------
 
-`PolynomialRoots.jl` is a library for finding roots of complex polynomials,
-written in [Julia](http://julialang.org/).
+`PolynomialRoots.jl` is a library for finding roots of complex univariate
+polynomials, written in [Julia](http://julialang.org/).
 
 This is an implementation in Julia of the
 [General Complex Polynomial Root Solver](http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/),
