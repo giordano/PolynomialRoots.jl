@@ -71,6 +71,8 @@ __precompile__()
 
 module PolynomialRoots
 
+using Compat: undef
+
 export roots, roots5
 
 const third = 1//3
@@ -178,9 +180,9 @@ function solve_cubic_eq(poly::Vector{Complex{T}}) where {T<:AbstractFloat}
     # quadratic equation: z^2 - Az + B^3=0  where roots are equal to s1^3 and s2^3
     Δ = sqrt(A*A - 4*B*B*B)
     if real(conj(A)*Δ)>=0 # scalar product to decide the sign yielding bigger magnitude
-        s1 = (0.5*(A + Δ))^(third)
+        s1 = exp(log(0.5 * (A + Δ)) * third)
     else
-        s1 = (0.5*(A - Δ))^(third)
+        s1 = exp(log(0.5 * (A - Δ)) * third)
     end
     if s1 == 0
         s2 = s1
@@ -338,7 +340,9 @@ function laguerre2newton(poly::Vector{Complex{T}}, degree::Integer,
             n_1_nth = (degree - 1)*one_nth
             two_n_div_n_1 = 2 / n_1_nth
             c_one_nth = complex(one_nth)
+            lasti = 0
             for i = 1:MAX_ITERS
+                lasti = i
                 # calculate value of polynomial and its first two derivatives and prepare
                 # stoping criterion
                 p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
@@ -403,14 +407,16 @@ function laguerre2newton(poly::Vector{Complex{T}}, degree::Integer,
                 end
                 root = newroot
             end # do mode 2
-            if i >= MAX_ITERS
+            if lasti >= MAX_ITERS
                 success = false
                 return root, iter, success
             end
         end # if mode 2
         #------------------------------------------------------------- mode 1
         if mode == 1 # SECOND-ORDER GENERAL METHOD (SG)
+            lasti = 0
             for i = j:MAX_ITERS
+                lasti = i
                 # calculate value of polynomial and its first two derivatives
                 if mod(i - j, 10) == 0
                     # prepare stoping criterion
@@ -468,7 +474,7 @@ function laguerre2newton(poly::Vector{Complex{T}}, degree::Integer,
                 end
                 root = newroot
             end # do mode 1
-            if i >= MAX_ITERS
+            if lasti >= MAX_ITERS
                 success = false
                 return root, iter, success
             end
@@ -547,7 +553,7 @@ end
 function sort_5_points_by_separation_i(points::Vector{Complex{T}}) where {T<:AbstractFloat}
     n = 5
     distances2 = ones(T, n, n) .* Inf
-    dmin = Array{T}(n)
+    dmin = Array{T}(undef, n)
     @inbounds for j = 1:n, i = 1:j-1
         @views distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end
