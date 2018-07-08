@@ -19,8 +19,11 @@
 
 ### Code:
 
+module PolynomialRootsTests
+
 using PolynomialRoots
-using Base.Test
+using Compat.Test
+import Compat: ComplexF64
 
 import PolynomialRoots: evalpoly
 
@@ -77,7 +80,7 @@ end
 @testset "0th-order polynomials" begin
     poly = [1]
     res  = @inferred(roots(poly))
-    @test Array{Complex128}(0) == res
+    @test ComplexF64[] == res
 end
 
 @testset "1st-order polynomials" begin
@@ -233,3 +236,5 @@ end
     @test_throws AssertionError @inferred(roots5([1,2,3]))
     @test_throws AssertionError @inferred(roots5([1,2,3,4,5,6], [1]))
 end
+
+end # module
