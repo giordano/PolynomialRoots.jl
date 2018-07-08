@@ -556,7 +556,7 @@ function sort_5_points_by_separation_i(points::Vector{Complex{T}}) where {T<:Abs
     @inbounds for j = 1:n, i = 1:j-1
         @views distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end
-    return sortperm(minimum(distances2, 2), rev = true)
+    return sortperm(minimum(distances2, 2)[:], rev = true)
 end
 
 sort_5_points_by_separation!(points::Vector{Complex{T}}) where {T<:AbstractFloat} =
