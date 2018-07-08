@@ -553,14 +553,10 @@ end
 function sort_5_points_by_separation_i(points::Vector{Complex{T}}) where {T<:AbstractFloat}
     n = 5
     distances2 = ones(T, n, n) .* Inf
-    dmin = Array{T}(undef, n)
     @inbounds for j = 1:n, i = 1:j-1
         @views distances2[i, j] = distances2[j, i] = abs2(points[i] - points[j])
     end
-    @inbounds for j = 1:n
-        @views dmin[j] = minimum(distances2[j,:])
-    end
-    return sort!(collect(1:n), lt=(i,j) -> dmin[i]>dmin[j])
+    return sortperm(minimum(distances2, 2), rev = true)
 end
 
 sort_5_points_by_separation!(points::Vector{Complex{T}}) where {T<:AbstractFloat} =
