@@ -1,12 +1,12 @@
 History of PolynomialRoots.jl
 =============================
 
-v0.2.0 (2018-0?-??)
+v0.2.0 (2018-08-17)
 -------------------
 
 ### Breaking Changes
 
-* Support for Julia 0.5 was dropped.
+* Julia 0.7 is required.  Support for previous versions was dropped.
 
 v0.1.0 (2017-05-07)
 -------------------
