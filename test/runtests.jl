@@ -22,8 +22,7 @@
 module PolynomialRootsTests
 
 using PolynomialRoots
-using Compat.Test
-import Compat: ComplexF64
+using Test
 
 import PolynomialRoots: evalpoly
 
