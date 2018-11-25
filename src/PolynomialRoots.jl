@@ -82,7 +82,7 @@ const FRAC_JUMPS = [0.64109297, # some random numbers
                     0.37794326, 0.04618805,  0.75132137]
 const FRAC_JUMP_LEN = length(FRAC_JUMPS)
 
-@inline function eval_poly_der(x::T, poly::Vector{T}, degree, c_zero) where {T<:Complex}
+@inline function eval_poly_der(x::T, poly::AbstractVector{T}, degree, c_zero) where {T<:Complex}
     p = poly[end]
     dp = c_zero
     @inbounds for k in degree:-1:1
@@ -92,7 +92,7 @@ const FRAC_JUMP_LEN = length(FRAC_JUMPS)
     return p, dp
 end
 
-@inline function eval_poly_der2(x::T, poly::Vector{T}, degree, c_zero) where {T<:Complex}
+@inline function eval_poly_der2(x::T, poly::AbstractVector{T}, degree, c_zero) where {T<:Complex}
     p = poly[end]
     dp = c_zero
     d2p_half = c_zero
@@ -104,7 +104,7 @@ end
     return p, dp, d2p_half
 end
 
-@inline function eval_poly_der_ek(x::T, poly::Vector{T}, degree, c_zero) where {T<:Complex}
+@inline function eval_poly_der_ek(x::T, poly::AbstractVector{T}, degree, c_zero) where {T<:Complex}
     p = poly[end]
     dp = c_zero
     ek = abs(p)
@@ -118,7 +118,7 @@ end
     return p, dp, ek
 end
 
-@inline function eval_poly_der2_ek(x::T, poly::Vector{T}, degree, c_zero) where {T<:Complex}
+@inline function eval_poly_der2_ek(x::T, poly::AbstractVector{T}, degree, c_zero) where {T<:Complex}
     p = poly[end]
     dp = c_zero
     d2p_half = c_zero
@@ -134,7 +134,7 @@ end
     return p, dp, d2p_half, ek
 end
 
-function divide_poly_1(p::Complex{T}, poly::Vector{Complex{T}},
+function divide_poly_1(p::Complex{T}, poly::AbstractVector{Complex{T}},
                        degree::Integer) where {T<:AbstractFloat}
     coef = poly[degree+1]
     polyout = poly[1:degree]
@@ -147,7 +147,7 @@ function divide_poly_1(p::Complex{T}, poly::Vector{Complex{T}},
     return polyout, remainder
 end
 
-function solve_quadratic_eq(poly::Vector{Complex{T}}) where {T<:AbstractFloat}
+function solve_quadratic_eq(poly::AbstractVector{Complex{T}}) where {T<:AbstractFloat}
     c, b, a = poly
     Δ = sqrt(b*b - 4*a*c)
     if real(conj(b)*Δ) >= 0
@@ -164,7 +164,7 @@ function solve_quadratic_eq(poly::Vector{Complex{T}}) where {T<:AbstractFloat}
     return x0, x1
 end
 
-function solve_cubic_eq(poly::Vector{Complex{T}}) where {T<:AbstractFloat}
+function solve_cubic_eq(poly::AbstractVector{Complex{T}}) where {T<:AbstractFloat}
     # Cubic equation solver for complex polynomial (degree=3)
     # http://en.wikipedia.org/wiki/Cubic_function   Lagrange's method
     a1  =  1 / poly[4]
@@ -192,7 +192,7 @@ function solve_cubic_eq(poly::Vector{Complex{T}}) where {T<:AbstractFloat}
     return third*(s0 + s1 + s2), third*(s0 + s1*zeta2 + s2*zeta1), third*(s0 + s1*zeta1 + s2*zeta2)
 end
 
-function newton_spec(poly::Vector{Complex{T}}, degree::Integer,
+function newton_spec(poly::AbstractVector{Complex{T}}, degree::Integer,
                      root::Complex{T}, epsilon::E) where {T<:AbstractFloat,E<:AbstractFloat}
     iter = 0
     success = true
@@ -252,7 +252,7 @@ function newton_spec(poly::Vector{Complex{T}}, degree::Integer,
     return root, iter, success
 end
 
-function laguerre(poly::Vector{Complex{T}}, degree::Integer,
+function laguerre(poly::AbstractVector{Complex{T}}, degree::Integer,
                   root::Complex{T}, epsilon::E) where {T<:AbstractFloat,E<:AbstractFloat}
     c_zero = zero(Complex{T})
     iter = 0
@@ -317,7 +317,7 @@ function laguerre(poly::Vector{Complex{T}}, degree::Integer,
     return root, iter, success
 end
 
-function laguerre2newton(poly::Vector{Complex{T}}, degree::Integer,
+function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                          root::Complex{T}, starting_mode::Integer,
                          epsilon::E) where {T<:AbstractFloat,E<:AbstractFloat}
     c_zero = zero(Complex{T})
@@ -532,7 +532,7 @@ function laguerre2newton(poly::Vector{Complex{T}}, degree::Integer,
     return root, iter, success
 end
 
-function find_2_closest_from_5(points::Vector{Complex{T}}) where {T<:AbstractFloat}
+function find_2_closest_from_5(points::AbstractVector{Complex{T}}) where {T<:AbstractFloat}
     n = 5
     d2min = Inf
     i1 = 0
@@ -548,7 +548,7 @@ function find_2_closest_from_5(points::Vector{Complex{T}}) where {T<:AbstractFlo
     return i1, i2, d2min
 end
 
-function sort_5_points_by_separation_i(points::Vector{Complex{T}}) where {T<:AbstractFloat}
+function sort_5_points_by_separation_i(points::AbstractVector{Complex{T}}) where {T<:AbstractFloat}
     n = 5
     distances2 = fill(Inf, (n, n))
     @inbounds for j = 1:n, i = 1:j-1
@@ -557,13 +557,13 @@ function sort_5_points_by_separation_i(points::Vector{Complex{T}}) where {T<:Abs
     return sortperm(minimum(distances2, dims = 2)[:], rev = true)
 end
 
-sort_5_points_by_separation!(points::Vector{Complex{T}}) where {T<:AbstractFloat} =
+sort_5_points_by_separation!(points::AbstractVector{Complex{T}}) where {T<:AbstractFloat} =
     @views points = points[sort_5_points_by_separation_i(points)]
 
 # Original function has a `use_roots_as_starting_points' argument.  We don't
 # have this argument and always use `roots' as starting points, it's a task of
 # the interface to set a proper starting value if the user doesn't provide it.
-function roots!(roots::Vector{Complex{T}}, poly::Vector{Complex{T}}, epsilon::E,
+function roots!(roots::AbstractVector{Complex{T}}, poly::AbstractVector{Complex{T}}, epsilon::E,
                 degree::Integer, polish::Bool) where {T<:AbstractFloat,E<:AbstractFloat}
     isnan(epsilon) && (epsilon = eps(T))
     poly2 = copy(poly)
@@ -599,7 +599,7 @@ function roots!(roots::Vector{Complex{T}}, poly::Vector{Complex{T}}, epsilon::E,
     return roots
 end
 
-function roots(poly::Vector{<:Number}, roots::Vector{<:Number};
+function roots(poly::AbstractVector{<:Number}, roots::AbstractVector{<:Number};
                epsilon::AbstractFloat=NaN, polish::Bool=false)
     degree = length(poly) - 1
     @assert degree == length(roots) "`poly' must have one element more than `roots'"
@@ -607,14 +607,14 @@ function roots(poly::Vector{<:Number}, roots::Vector{<:Number};
            epsilon, degree, polish)
 end
 
-function roots(poly::Vector{N}; epsilon::AbstractFloat=NaN,
+function roots(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN,
                polish::Bool=false) where {N<:Number}
     degree = length(poly) - 1
     roots!(zeros(Complex{real(float(N))}, degree), float.(complex(poly)),
            epsilon, degree, polish)
 end
 
-function roots5!(roots::Vector{Complex{T}}, poly::Vector{Complex{T}},
+function roots5!(roots::AbstractVector{Complex{T}}, poly::AbstractVector{Complex{T}},
                  epsilon::AbstractFloat, polish::Bool) where {T<:AbstractFloat}
     isnan(epsilon) && (epsilon = eps(T))
     c_zero = zero(Complex{T})
@@ -715,7 +715,7 @@ function roots5!(roots::Vector{Complex{T}}, poly::Vector{Complex{T}},
     return roots
 end
 
-function roots5(poly::Vector{<:Number}, roots::Vector{<:Number};
+function roots5(poly::AbstractVector{<:Number}, roots::AbstractVector{<:Number};
                 epsilon::AbstractFloat=NaN)
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     @assert length(roots) == 5 "`roots' vector must have 5 elements"
@@ -723,7 +723,7 @@ function roots5(poly::Vector{<:Number}, roots::Vector{<:Number};
                    epsilon, true)
 end
 
-function roots5(poly::Vector{N}; epsilon::AbstractFloat=NaN) where {N<:Number}
+function roots5(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN) where {N<:Number}
     @assert length(poly) == 6 "Use `roots' function for polynomials of degree != 5"
     return roots5!(zeros(Complex{real(float(N))},  5), float.(complex(poly)),
                    epsilon, false)
@@ -790,7 +790,7 @@ roots5
 # Use algorithm described in Knuth, TAOCP vol. 2, section 4.6.4, equation (3) to
 # evaluate polynomial with coefficients u at point z.  This is the same
 # algorithm used in @evalpoly macro.
-function evalpoly(z::Complex{T}, u::Vector{Complex{T}}) where {T<:AbstractFloat}
+function evalpoly(z::Complex{T}, u::AbstractVector{Complex{T}}) where {T<:AbstractFloat}
     x, y = reim(z)
     r = x + x
     s = x*x + y*y
@@ -805,10 +805,10 @@ function evalpoly(z::Complex{T}, u::Vector{Complex{T}}) where {T<:AbstractFloat}
     end
     z*a[end] + b[end]
 end
-function evalpoly(z::Complex{Z}, u::Vector{U}) where {Z<:AbstractFloat,U<:Number}
+function evalpoly(z::Complex{Z}, u::AbstractVector{U}) where {Z<:AbstractFloat,U<:Number}
     T = promote_type(Complex{Z}, U)
-    return evalpoly(convert(T, z), convert(Vector{T}, u))
+    return evalpoly(convert(T, z), convert(AbstractVector{T}, u))
 end
-evalpoly(z::Vector{Complex{Z}}, u::Vector{U}) where {Z,U} = map(x->evalpoly(x, u), z)
+evalpoly(z::AbstractVector{Complex{Z}}, u::AbstractVector{U}) where {Z,U} = map(x->evalpoly(x, u), z)
 
 end # module
