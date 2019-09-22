@@ -1,9 +1,9 @@
 # PolynomialRoots.jl
 
-| [**Package Evaluator**][pkgeval-link] | **Build Status**                          | **Code Coverage**               |
-|:-------------------------------------:|:-----------------------------------------:|:-------------------------------:|
-| [![][pkg-0.5-img]][pkg-0.5-url]       | [![Build Status][travis-img]][travis-url] | [![][coveral-img]][coveral-url] |
-| [![][pkg-0.6-img]][pkg-0.6-url]       | [![Build Status][appvey-img]][appvey-url] | [![][codecov-img]][codecov-url] |
+| **Build Status**                          | **Code Coverage**               |
+|:-----------------------------------------:|:-------------------------------:|
+| [![Build Status][travis-img]][travis-url] | [![][coveral-img]][coveral-url] |
+| [![Build Status][appvey-img]][appvey-url] | [![][codecov-img]][codecov-url] |
 
 Introduction
 ------------
@@ -263,13 +263,6 @@ library (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) from which
 The original author of `PolynomialRoots.jl` is Mosè Giordano.
 
 
-
-[pkgeval-link]: http://pkg.julialang.org/?pkg=PolynomialRoots
-
-[pkg-0.5-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.5.svg
-[pkg-0.5-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
-[pkg-0.6-img]: http://pkg.julialang.org/badges/PolynomialRoots_0.6.svg
-[pkg-0.6-url]: http://pkg.julialang.org/detail/PolynomialRoots.html
 
 [travis-img]: https://travis-ci.org/giordano/PolynomialRoots.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/giordano/PolynomialRoots.jl
