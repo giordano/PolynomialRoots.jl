@@ -228,6 +228,9 @@ end
             -47.40236121905153, -71.92379520244637, -57.977452001749555]
     @test isapprox(zeros(length(poly)-1),
                    evalpoly(@inferred(roots(poly)), poly), atol = 2e-11)
+    # https://github.com/giordano/PolynomialRoots.jl/issues/11
+    poly = [1.0, -2.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    @test isapprox(@inferred(roots(poly)), [1, 1])
 end
 
 @testset "Errors" begin
