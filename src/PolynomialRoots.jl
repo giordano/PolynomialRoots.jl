@@ -609,8 +609,15 @@ end
 
 function roots(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN,
                polish::Bool=false) where {N<:Number}
-    degree = length(poly) - 1
-    roots!(zeros(Complex{real(float(N))}, degree), float.(complex(poly)),
+    # Before starting, truncate the polynomial if it has zeros in the trailing elements
+    last_nz = findlast(!iszero, poly)
+    if lastindex(poly) == last_nz
+        _poly = poly
+    else
+        _poly = poly[1:last_nz]
+    end
+    degree = length(_poly) - 1
+    roots!(zeros(Complex{real(float(N))}, degree), float.(complex(_poly)),
            epsilon, degree, polish)
 end
 
