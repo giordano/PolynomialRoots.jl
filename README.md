@@ -50,7 +50,7 @@ julia> Pkg.add("PolynomialRoots")
 You may need to update your package list with `Pkg.update()` in order to get the
 latest version of `PolynomialRoots.jl`.
 
-Older versions are available also for Julia 0.5 and 0.4.
+Older versions are available also for Julia 0.4-0.6.
 
 Usage
 -----
