@@ -38,7 +38,7 @@ precision calculations (see example below).
 Installation
 ------------
 
-`PolynomialRoots.jl` is available for Julia 0.5 and later versions, and can be
+`PolynomialRoots.jl` is available for Julia 0.7 and later versions, and can be
 installed with
 [Julia built-in package manager](http://docs.julialang.org/en/stable/manual/packages/).
 In a Julia session run the command
@@ -50,7 +50,7 @@ julia> Pkg.add("PolynomialRoots")
 You may need to update your package list with `Pkg.update()` in order to get the
 latest version of `PolynomialRoots.jl`.
 
-Older versions are available also for Julia 0.4.
+Older versions are available also for Julia 0.4-0.6.
 
 Usage
 -----
