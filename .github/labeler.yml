@@ -1,0 +1,6 @@
+Documentation:
+- "**/*.md"
+CI:
+- "**/*.yml"
+Test Suite Modification:
+- "test/*"
