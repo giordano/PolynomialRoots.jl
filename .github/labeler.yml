@@ -1,4 +1,6 @@
-help wanted:
-    title: "help*"
-
-
+documentation:
+- "**/*.md"
+CI:
+- "**/*.yml"
+Testing:
+- "test/*"
