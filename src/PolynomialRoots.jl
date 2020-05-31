@@ -229,7 +229,7 @@ function newton_spec(poly::AbstractVector{Complex{T}}, degree::Integer,
         end # if abs2p == 0
         if dp == 0
             # problem with zero.  Make some random jump
-            dx::Complex{T} = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i, FRAC_JUMP_LEN)) + 1]*2*pi)
+            dx::Complex{T} = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i, FRAC_JUMP_LEN)) + 1]) * 2 * pi)
         else
             dx = p / dp # Newton method, see http://en.wikipedia.org/wiki/Newton's_method
         end
@@ -295,7 +295,7 @@ function laguerre(poly::AbstractVector{Complex{T}}, degree::Integer,
             end
         end
         if denom == 0  # test if demoninators are > 0.0 not to divide by zero
-            dx::Complex{T} = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1] * 2 * pi) # make some random jump
+            dx::Complex{T} = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
         else
             dx = fac_netwon / denom
         end
@@ -308,7 +308,7 @@ function laguerre(poly::AbstractVector{Complex{T}}, degree::Integer,
             return root, iter, success
         end
         if mod(i, FRAC_JUMP_EVERY) == 0 # decide whether to do a jump of modified length (to break cycles)
-            faq = FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1]
+            faq = T(FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1])
             newroot = root - faq*dx # do jump of some semi-random length (0<faq<1)
         end
         root = newroot
@@ -334,7 +334,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
     while true
         #------------------------------------------------------------- mode 2
         if mode >= 2 # LAGUERRE'S METHOD
-            one_nth = 1 / degree
+            one_nth = 1 / T(degree)
             n_1_nth = (degree - 1)*one_nth
             two_n_div_n_1 = 2 / n_1_nth
             c_one_nth = complex(one_nth)
@@ -382,7 +382,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                     end
                 end
                 if denom == 0 #test if demoninators are > 0.0 not to divide by zero
-                    dx = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1] * 2 * pi) # make some random jump
+                    dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     dx = fac_netwon / denom
                 end
@@ -400,7 +400,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                     break # go to Newton's or SG
                 end
                 if mod(i, FRAC_JUMP_EVERY) == 0 # decide whether to do a jump of modified length (to break cycles)
-                    faq = FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1]
+                    faq = T(FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1])
                     newroot = root - faq*dx # do jump of some semi-random length (0<faq<1)
                 end
                 root = newroot
@@ -442,7 +442,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                     good_to_go = false # reset if we are outside the zone of the root
                 end
                 if dp == 0 #test if demoninators are > 0.0 not to divide by zero
-                    dx = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]*2*pi) # make some random jump
+                    dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     fac_netwon = p / dp
                     fac_extra = d2p_half / dp
@@ -467,7 +467,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                     break # go to Newton's
                 end
                 if mod(i, FRAC_JUMP_EVERY) == 0 # decide whether to do a jump of modified length (to break cycles)
-                    faq = FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1]
+                    faq = T(FRAC_JUMPS[trunc(Integer, mod(i / FRAC_JUMP_EVERY - 1, FRAC_JUMP_LEN)) + 1])
                     newroot = root - faq*dx # do jump of some semi-random length (0<faq<1)
                 end
                 root = newroot
@@ -505,7 +505,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                     good_to_go = false # reset if we are outside the zone of the root
                 end
                 if dp == 0 # test if demoninators are > 0.0 not to divide by zero
-                    dx = (abs(root) + 1) * cis(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1] * 2 * pi) # make some random jump
+                    dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     dx = p / dp
                 end
