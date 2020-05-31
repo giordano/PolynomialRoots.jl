@@ -231,6 +231,11 @@ end
     # https://github.com/giordano/PolynomialRoots.jl/issues/11
     poly = [1.0, -2.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     @test isapprox(@inferred(roots(poly)), [1, 1])
+    # https://github.com/giordano/PolynomialRoots.jl/pull/19
+    for T in [Float32, Float64]
+        poly = T[0.7513126327861701, 0.6448833539420931, 0.07782644396003469, 0.8481854810000327]
+        @test isapprox(zeros(length(poly)-1), evalpoly(roots(poly), poly), atol = 1000eps(T))
+    end
 end
 
 @testset "Errors" begin
