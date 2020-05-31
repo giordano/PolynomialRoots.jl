@@ -1,6 +1,21 @@
 History of PolynomialRoots.jl
 =============================
 
+v1.0.0 (2020-06-01)
+-------------------
+
+### Breaking Changes
+
+* Julia 1.0 is required.  Support for previous versions was dropped.
+
+### Bug Fixes
+
+* Fixed error when the last coefficient is not zero
+  ([#11](https://github.com/giordano/PolynomialRoots.jl/issues/11),
+  [#11](https://github.com/giordano/PolynomialRoots.jl/pull/12)).
+* Fix error when input type is different from `Float64`
+  ([#20](https://github.com/giordano/PolynomialRoots.jl/pull/20)).
+
 v0.2.0 (2018-08-17)
 -------------------
 
