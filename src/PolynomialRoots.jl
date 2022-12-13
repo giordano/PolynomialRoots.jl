@@ -607,15 +607,20 @@ function roots(poly::AbstractVector{<:Number}, roots::AbstractVector{<:Number};
            epsilon, degree, polish)
 end
 
+# Returns a view into the polynomial that excludes any trailing zero
+# coefficients.
+#
+# Errors if the coefficients are all zero.
+function normalized_poly_coefs(poly::AbstractVector{<:Number})
+    l = findlast(!iszero, poly)
+    isnothing(l) && error("zero polynomial")
+    @view poly[begin:l]
+end
+
 function roots(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN,
                polish::Bool=false) where {N<:Number}
     # Before starting, truncate the polynomial if it has zeros in the trailing elements
-    last_nz = findlast(!iszero, poly)
-    if lastindex(poly) == last_nz
-        _poly = poly
-    else
-        _poly = poly[1:last_nz]
-    end
+    _poly = normalized_poly_coefs(poly)
     degree = length(_poly) - 1
     roots!(zeros(Complex{real(float(N))}, degree), float.(complex(_poly)),
            epsilon, degree, polish)
