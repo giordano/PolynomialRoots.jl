@@ -248,11 +248,11 @@ License or the GNU Lesser General Public License version 3 or any later version,
 at your option.  These are the same licenses used by the General Complex
 Polynomial Root Solver.
 
-A custom in the scientific comunity is (regardless of the licence you chose to
+A custom in the scientific community is (regardless of the licence you chose to
 use or distribute this software under) that if this code was important in the
 scientific process or for the results of your scientific work, we kindly ask you
 for the **appropriate citation** of the paper Skowron & Gould 2012
-(http://arxiv.org/abs/1203.1034), and we would be greatful if you pass the
+(http://arxiv.org/abs/1203.1034), and we would be grateful if you pass the
 information about the proper citation to anyone whom you redistribute this
 software to.
 
