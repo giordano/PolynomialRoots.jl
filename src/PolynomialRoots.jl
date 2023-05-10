@@ -737,7 +737,7 @@ function roots5(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN) where {N<:N
 end
 
 """
-    roots(polynomial[, roots]; polish=true, epsilon=1e-20) -> roots
+    roots(polynomial[, roots]; polish=false, epsilon=NaN) -> roots
 
 Find all the roots of `polynomial`, of any degree.
 
@@ -768,7 +768,7 @@ Function `root5` is specialized for polynomials of degree 5.
 roots
 
 """
-    roots5(polynomial[, roots]; epsilon=1e-20) -> roots
+    roots5(polynomial[, roots]; epsilon=NaN) -> roots
 
 Find all the roots of `polynomial`, of degree 5 only.
 
