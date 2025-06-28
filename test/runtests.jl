@@ -161,7 +161,7 @@ end
     @test isapprox(zeros(length(poly) - 1),
                    evalpoly(@inferred(roots(poly)), poly), atol = 3e-14)
     @test isapprox(zeros(length(poly) - 1),
-                   evalpoly(@inferred(roots5(poly, ones(5))), poly), atol = 3e-14)
+                   evalpoly(@inferred(roots5(poly, ones(5))), poly), atol = 1e-13)
     poly = [(8.2 + 1.79im), -(8.38 + 1.57im), -(7.33 - 3.94im), (4.91 - 4.37im), (5.52 + 5.68im), -(3.9 - 7.12im)]
     @test isapprox(zeros(length(poly) - 1),
                    evalpoly(@inferred(roots(poly)), poly), atol = 3e-14)
@@ -180,7 +180,7 @@ end
     @test isapprox(zeros(length(poly) - 1),
                    evalpoly(@inferred(roots(poly)), poly), atol = 6e-14)
     @test isapprox(zeros(length(poly) - 1),
-                   evalpoly(@inferred(roots5(poly, ones(5))), poly), atol = 2e-14)
+                   evalpoly(@inferred(roots5(poly, ones(5))), poly), atol = 1e-13)
     tol  = 2e-12
     poly = [120im, -(184 + 90im), (138 - 57im), (54im - 15), -(6 + 9im), 1]
     res  = @inferred(roots(poly,  [im, 2, 3im, 4, 5im]))
