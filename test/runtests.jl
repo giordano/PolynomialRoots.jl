@@ -80,6 +80,9 @@ end
     poly = [1]
     res  = @inferred(roots(poly))
     @test ComplexF64[] == res
+
+    res = @inferred(roots([0]))
+    @test isnan(only(res))
 end
 
 @testset "1st-order polynomials" begin

@@ -611,6 +611,7 @@ function roots(poly::AbstractVector{N}; epsilon::AbstractFloat=NaN,
                polish::Bool=false) where {N<:Number}
     # Before starting, truncate the polynomial if it has zeros in the trailing elements
     last_nz = findlast(!iszero, poly)
+    last_nz === nothing && return Complex{real(float(N))}[NaN]
     if lastindex(poly) == last_nz
         _poly = poly
     else
