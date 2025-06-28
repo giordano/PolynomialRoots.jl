@@ -48,11 +48,11 @@
 # (http://www.astrouw.edu.pl/~jskowron/cmplx_roots_sg/) by Jan Skowron and
 # Andrew Gould.
 #
-# A custom in the scientific comunity is (regardless of the licence you chose to
+# A custom in the scientific community is (regardless of the licence you chose to
 # use or distribute this software under) that if this code was important in the
 # scientific process or for the results of your scientific work, we kindly ask
 # you for the appropriate citation of the paper Skowron & Gould 2012 (see
-# below), and we would be greatful if you pass the information about the proper
+# below), and we would be grateful if you pass the information about the proper
 # citation to anyone whom you redistribute this software to.
 #
 ### References:
@@ -200,7 +200,7 @@ function newton_spec(poly::AbstractVector{Complex{T}}, degree::Integer,
     c_zero = zero(Complex{T})
     stopping_crit2 = zero(promote_type(T,E))
     for i = 1:MAX_ITERS
-        # Prepare stoping criterion.  Calculate value of polynomial and its
+        # Prepare stopping criterion.  Calculate value of polynomial and its
         # first two derivatives
         if mod(i, 10) == 1 # Calculate stopping criterion every ten iterations
             p, dp, ek = eval_poly_der_ek(root, poly, degree, c_zero)
@@ -263,7 +263,7 @@ function laguerre(poly::AbstractVector{Complex{T}}, degree::Integer,
     two_n_div_n_1 = 2 / n_1_nth
     c_one_nth = complex(one_nth)
     for i = 1:MAX_ITERS
-        # calculate value of polynomial and its first two derivatives and prepare stoping
+        # calculate value of polynomial and its first two derivatives and prepare stopping
         # criterion
         p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
         iter=iter+1
@@ -294,7 +294,7 @@ function laguerre(poly::AbstractVector{Complex{T}}, degree::Integer,
                 denom = c_one_nth - n_1_nth*denom_sqrt
             end
         end
-        if denom == 0  # test if demoninators are > 0.0 not to divide by zero
+        if denom == 0  # test if denominators are > 0.0 not to divide by zero
             dx::Complex{T} = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
         else
             dx = fac_netwon / denom
@@ -342,7 +342,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
             for i = 1:MAX_ITERS
                 lasti = i
                 # calculate value of polynomial and its first two derivatives and prepare
-                # stoping criterion
+                # stopping criterion
                 p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
                 abs2p = abs2(p)
                 iter = iter + 1
@@ -381,7 +381,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                         denom = c_one_nth - n_1_nth*denom_sqrt
                     end
                 end
-                if denom == 0 #test if demoninators are > 0.0 not to divide by zero
+                if denom == 0 # test if denominators are > 0.0 not to divide by zero
                     dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     dx = fac_netwon / denom
@@ -417,7 +417,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                 lasti = i
                 # calculate value of polynomial and its first two derivatives
                 if mod(i - j, 10) == 0
-                    # prepare stoping criterion
+                    # prepare stopping criterion
                     p, dp, d2p_half, ek = eval_poly_der2_ek(root, poly, degree, c_zero)
                     stopping_crit2 = abs2(epsilon*ek)
                 else
@@ -441,7 +441,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                 else
                     good_to_go = false # reset if we are outside the zone of the root
                 end
-                if dp == 0 #test if demoninators are > 0.0 not to divide by zero
+                if dp == 0 #test if denominators are > 0.0 not to divide by zero
                     dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     fac_netwon = p / dp
@@ -480,7 +480,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
         if mode == 0 # NEWTON'S METHOD
             for i = j:j+10 # do only 10 iterations the most, then go back to full Laguerre's
                 # calculate value of polynomial and its first two derivatives
-                if i == j # calculate stopping crit only once at the begining
+                if i == j # calculate stopping crit only once at the beginning
                     p, dp, ek = eval_poly_der_ek(root, poly, degree, c_zero)
                     stopping_crit2 = abs2(epsilon*ek)
                 else #
@@ -504,7 +504,7 @@ function laguerre2newton(poly::AbstractVector{Complex{T}}, degree::Integer,
                 else
                     good_to_go = false # reset if we are outside the zone of the root
                 end
-                if dp == 0 # test if demoninators are > 0.0 not to divide by zero
+                if dp == 0 # test if denominators are > 0.0 not to divide by zero
                     dx = (abs(root) + 1) * cis(T(FRAC_JUMPS[trunc(Integer, mod(i,FRAC_JUMP_LEN)) + 1]) * 2 * pi) # make some random jump
                 else
                     dx = p / dp
